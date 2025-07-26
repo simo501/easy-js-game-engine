@@ -1,4 +1,5 @@
 export function gameLoop(scope) {
+    // per rendere codice leggibile e riutilizzabile
     let loop = this
 
     loop.main = function mainLoop(tframe) {
