@@ -3,18 +3,18 @@ export const keysDown = (() => {
 
     // Set up `onkeydown` event handler.
     document.onkeydown = function (ev) {
-        if (ev.keyCode === 39) { right = true; }
-        if (ev.keyCode === 37) { left = true; }
-        if (ev.keyCode === 38) { up = true; }
-        if (ev.keyCode === 40) { down = true; }
+        if (ev.key === 'ArrowRight') { right = true; }
+        if (ev.key === 'ArrowLeft') { left = true; }
+        if (ev.key === 'ArrowUp') { up = true; }
+        if (ev.key === 'ArrowDown') { down = true; }
     };
 
     // Set up `onkeyup` event handler.
     document.onkeyup = function (ev) {
-        if (ev.keyCode === 39) { right = false; }
-        if (ev.keyCode === 37) { left = false; }
-        if (ev.keyCode === 38) { up = false; }
-        if (ev.keyCode === 40) { down = false; }
+        if (ev.key === 'ArrowRight') { right = false; }
+        if (ev.key === 'ArrowLeft') { left = false; }
+        if (ev.key === 'ArrowUp') { up = false; }
+        if (ev.key === 'ArrowDown') { down = false; }
     };
 
     return {
