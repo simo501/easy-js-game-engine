@@ -36,6 +36,7 @@ export function gameLoop(scope) {
         // in modo tale da poterlo fermare in seguito se necessario
         loop.stopLoop = window.requestAnimationFrame(loop.main);
 
+        // tframe è il timestamp del frame corrente (timestamp frame)
         let now = tframe;
         let elapsed = now - before; // il tempo trascorso dall'ultimo frame
         let activeCycle, targetResetInterval;
