@@ -11,19 +11,40 @@ export class Player extends Entity {
     };
 
     update() {
+        // per ora collision prevenirà solo il movimento
         if (keysDown.isPressed.left) {
+            let nextX = this.position.x;
+
+            let collision = this.checkCollision(nextX -= this.moveSpeed, this.position.y).collision;
+            if (collision) return;
+
             this.position.x -= this.moveSpeed;
         }
 
         if (keysDown.isPressed.right) {
+            let nextX = this.position.x;
+
+            let collision = this.checkCollision(nextX += this.moveSpeed, this.position.y).collision;
+            if (collision) return;
+
             this.position.x += this.moveSpeed;
         }
 
         if (keysDown.isPressed.up) {
+            let nextY = this.position.y;
+            
+            let collision = this.checkCollision(this.position.x, nextY -= this.moveSpeed).collision;
+            if (collision) return;
+
             this.position.y -= this.moveSpeed;
         }
 
         if (keysDown.isPressed.down) {
+            let nextY = this.position.y;
+
+            let collision = this.checkCollision(this.position.x, nextY += this.moveSpeed).collision;
+            if (collision) return;
+
             this.position.y += this.moveSpeed;
         }
 

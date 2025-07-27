@@ -41,7 +41,6 @@ export class GameLoop {
 
 
     mainLoop(tframe) {
-        console.log('GameLoop.mainLoop()');
         // posizionando in questo modo requestAnimationFrame all'inizio del this 
         // essa verra eseguita in this proprio perchè stiamo dicendo al browser 
         // di richiedere un nuovo frame e di eseguire la funzione this.main al nuovo frame
@@ -57,6 +56,7 @@ export class GameLoop {
         let now = tframe;
         // il tempo trascorso dall'ultimo frame
         let elapsed = now - this.before;
+
 
         // targetResetInterval è il numero di frame che devono passare per resettare il ciclo
         let targetResetInterval;

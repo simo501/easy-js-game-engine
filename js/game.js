@@ -57,7 +57,7 @@ export default class Game {
     createEnemy() {
         console.log('Game: creating enemy');
         this.state.entities = this.state.entities || {};
-        this.state.entities.enemy = new Enemy(this);
+        this.state.entities.enemy = new Enemy(this, {x:this.constants.width / 2, y:this.constants.height / 2}, 1, 64, 64);
     }
 }
 
