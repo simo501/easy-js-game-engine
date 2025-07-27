@@ -23,10 +23,16 @@ export class GameLoop {
                 sineStart: 0
             }
         };
-        this.resetInterval = 5; // quando il ciclo viene resettato in secondi
-        this.resetState = 'new'; // The initial frame rate cycle
+        
+        // quando il ciclo viene resettato in secondi
+        // quindi in questo caso ogni 5 secondi va resettato il ciclo per mantenere
+        // la precisione ed evitare che il frame rate si abbassi
+        this.resetInterval = 5; 
+        // il ciclo di frame rate iniziale sarà new
+        this.resetState = 'new'; 
 
-        this.fps = 0; // A prop that will expose the current calculated FPS to other modules
+
+        this.fps = 0; 
 
         console.log('GameLoop initialized with target FPS:', this.fps);
 
@@ -79,7 +85,6 @@ export class GameLoop {
             this.fps =
                 Math.round(1000 / (activeCycle.sinceStart / activeCycle.frameCount) * 100) / 100;
 
-
             // se new.frameCount è uguale a old.frameCount allora significa
             // che il frame rate è stabile e non è cambiato
             // altrimenti significa che il frame rate non è stabile e gli diamo piu tempo
@@ -104,9 +109,12 @@ export class GameLoop {
                 this.resetState = (this.resetState === 'new' ? 'old' : 'new');
             }
 
-
+            // aggiorniamo lo stato del gioco
+            // chiamando il metodo update di GameUpdate
             this.scope.state = this.scope.update.update(now);
-
+            
+            // chiamiamo il metodo render di GameRender
+            // per disegnare il gioco sul canvas
             this.scope.render.render();
 
         }

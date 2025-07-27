@@ -3,6 +3,7 @@ export class GameRender {
         this.scope = scope;
         this.width = scope.constants.width;
         this.height = scope.constants.height;
+        this.state = scope.state || {};
         this.render()
     }
 
@@ -13,7 +14,7 @@ export class GameRender {
         scope.context.clearRect(0, 0, width, height);
 
         // disegniamo un rettangolo rosso
-        scope.context.fillStyle = 'red';
+        scope.context.fillStyle = 'gray';
         scope.context.fillRect(0, 0, width, height);
 
         // disegniamo un testo
@@ -26,15 +27,19 @@ export class GameRender {
             scope.context.fillText(`FPS: ${Math.round(scope.constants.targetFps)}`, 10, 50);
         }
 
-        
-        if (scope.hasOwnProperty('entities')) {
-            console.log('GameRender: rendering entities');
-            let entities = scope.state.entities;
 
-            for (let entity of entities) {
-                if (entity.hasOwnProperty('render')) {
-                    // se l'entità ha un metodo render, lo chiamiamo
-                    entity.render(scope.context);
+        if (this.state.hasOwnProperty('entities')) {
+            if (this.state.entities && Array.isArray(this.state.entities)) {
+                for (let entity of this.state.entities) {
+                    if (typeof entity.render === 'function') {
+                        entity.render();
+                    }
+                }
+            } else if (this.state.entities) {
+                console.log('GameUpdate: updating player entity');
+                let entity = this.state.entities.player;
+                if (typeof entity.render === 'function') {
+                    entity.render();
                 }
             }
         }

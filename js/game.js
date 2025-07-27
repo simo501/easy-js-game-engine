@@ -32,8 +32,14 @@ export default class Game {
         // inseriamo il canvas nel container prima di qualsiasi altro elemento
         $container.insertBefore(this.viewport, $container.firstChild);
 
+        // inizializziamo il giocatore
         this.createPlayer()
 
+        // assegnamo ad update un istanza di GameUpdate
+        // e render un istanza di GameRender
+        // e loop un istanza di GameLoop
+        // in modo tale da poter accedere ai metodi di queste classi
+        // tramite this.update, this.render e this.loop
         this.update = new GameUpdate(this);
         this.render = new GameRender(this);
         this.loop = new GameLoop(this);
@@ -41,11 +47,11 @@ export default class Game {
 
     // metodo per creare un giocatore ed aggiungerlo allo stato del gioco
     createPlayer() {
+        console.log('Game: creating player');
         this.state.entities = this.state.entities || {};
         // Instantiate a player as an active entity
         this.state.entities.player = new Player(
             this,
-            { x: this.constants.width / 2 },
         )
     }
 }
