@@ -1,14 +1,13 @@
-export function gameRender(scope) {
+export class GameRender {
+    constructor(scope) {
+        this.scope = scope;
+        this.width = scope.constants.width;
+        this.height = scope.constants.height;
+        this.render()
+    }
 
-    // prendiamo le costanti definite in Game()
-    let width = scope.constants.width;
-    let height = scope.constants.height;
-
-    // adesso ritorniamo ad una funzione render
-    // che si occupa di disegnare sul canvas
-    // rendendo così modulare e riutilizzabile il codice 
-    // separando l'inizializzazione delle variabili dalla logica
-    return function render() {
+    render() {
+        const { scope, width, height } = this;
 
         // puliamo il canvas
         scope.context.clearRect(0, 0, width, height);
@@ -27,7 +26,9 @@ export function gameRender(scope) {
             scope.context.fillText(`FPS: ${Math.round(scope.constants.targetFps)}`, 10, 50);
         }
 
+        
         if (scope.hasOwnProperty('entities')) {
+            console.log('GameRender: rendering entities');
             let entities = scope.state.entities;
 
             for (let entity of entities) {
@@ -36,8 +37,6 @@ export function gameRender(scope) {
                     entity.render(scope.context);
                 }
             }
-
         }
-    };
-
+    }
 }

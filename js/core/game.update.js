@@ -1,21 +1,24 @@
+export class GameUpdate {
+    constructor(scope) {
+        // Salva lo stato come proprietà della classe
+        this.state = scope.state || {};
+        this.update()
+    }
 
-// passiamo la variabile scope che contiene il contesto del gioco
-// per poter manipolare dati e proprietà che sono esterni alla funzione
-export function gameUpdate(scope) {
-    // se esiste assegna state senno assegna un oggetto vuoto
-    let state = scope.state || {};
-
-    if (state.hasOwnProperty('entities')) {
-        // se esiste la proprietà entities, le aggiorniamo
-        let entities = state.entities;
-
-        for (let entity of entities) {
-            if (entity.hasOwnProperty('update')) {
-                // se l'entità ha un metodo update, lo chiamiamo
-                entity.update();
+    update() {
+        console.log('GameUpdate: update method called');
+        // Aggiorna tutte le entità se presenti
+        if (this.state.entities && Array.isArray(this.state.entities)) {
+            for (let entity of this.state.entities) {
+                if (typeof entity.update === 'function') {
+                    entity.update();
+                }
             }
-
         }
-        return state;
+    }
+
+    getState() {
+        // Ritorna lo stato corrente del gioco
+        return this.state;
     }
 }
