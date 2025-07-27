@@ -1,9 +1,18 @@
+import { Directions } from "../utils/utils.directions.js";
 import { keysDown } from "../utils/utils.keysDown.js";
-import { Entity } from "./entity.js";
+import { DynamicEntity } from "./dynamic.entity.js";
 
-export class Player extends Entity {
-    constructor(scope, position = {x:0, y:0}, moveSpeed=3, width=23, height=16) {
-        super(scope, position, moveSpeed, width, height);
+export class Player extends DynamicEntity {
+    constructor(
+        scope, 
+        position = { x: 0, y: 0 }, 
+        moveSpeed = 3, 
+        width = 23, 
+        height = 16, 
+        direction = Directions.EAST, 
+        health = 100, 
+        damage = 10) {
+        super(scope, position, moveSpeed, width, height, direction, health, damage);
     }
 
     render() {
@@ -12,46 +21,44 @@ export class Player extends Entity {
 
     update() {
         // per ora collision prevenirà solo il movimento
+        let nextX = this.position.x;
+        let nextY = this.position.y;
+
         if (keysDown.isPressed.left) {
-            let nextX = this.position.x;
-
-            let collision = this.checkCollision(nextX -= this.moveSpeed, this.position.y).collision;
-            if (collision) return;
-
-            this.position.x -= this.moveSpeed;
+            this.direction = Directions.LEFT;
+            nextX -= this.moveSpeed;
         }
 
         if (keysDown.isPressed.right) {
-            let nextX = this.position.x;
-
-            let collision = this.checkCollision(nextX += this.moveSpeed, this.position.y).collision;
-            if (collision) return;
-
-            this.position.x += this.moveSpeed;
+            this.direction = Directions.RIGHT;
+            nextX += this.moveSpeed
         }
 
         if (keysDown.isPressed.up) {
-            let nextY = this.position.y;
-            
-            let collision = this.checkCollision(this.position.x, nextY -= this.moveSpeed).collision;
-            if (collision) return;
-
-            this.position.y -= this.moveSpeed;
+            this.direction = Directions.UP;
+            nextY -= this.moveSpeed
         }
 
         if (keysDown.isPressed.down) {
-            let nextY = this.position.y;
+            this.direction = Directions.DOWN;
+            nextY += this.moveSpeed
+        }
 
-            let collision = this.checkCollision(this.position.x, nextY += this.moveSpeed).collision;
-            if (collision) return;
+        let collision = this.checkCollision(nextX, nextY).collision;
+        if (collision) return;
 
-            this.position.y += this.moveSpeed;
+        // se non c'è collisione, aggiorniamo la posizione del player
+        this.position.x = nextX;
+        this.position.y = nextY;
+
+        console.log(`Player position x:${this.position.x} + ${this.width}, y: ${this.position.y} + ${this.height}, direction: ${this.direction}`);
+
+        if (keysDown.isPressed.space) {
+            // sparo
+            this.shoot();
         }
 
         // qui dovremmo controllare i limiti del canvas
     }
 
-    getPlayer() {
-        super.getEntity();
-    }
 }

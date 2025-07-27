@@ -8,6 +8,7 @@ export class GameRender {
     }
 
     render() {
+        // destructuriamo le proprietà necessarie
         const { scope, width, height } = this;
 
         // puliamo il canvas
@@ -28,8 +29,8 @@ export class GameRender {
 
 
         if (this.state.hasOwnProperty('entities')) {
-            const entities = Object.values(this.state.entities);
-            for (const entity of entities) {
+            const entities = this.state.entities
+            for (const entity of entities.keys()) {
                 entity.render() 
             }
         }

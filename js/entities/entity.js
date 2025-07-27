@@ -1,13 +1,29 @@
 export class Entity {
-    constructor(scope, position = { x: 0, y: 0 }, moveSpeed = 3, width = 23, height = 16) {
+    constructor(
+        scope,
+        position = { x: 0, y: 0 },
+        moveSpeed = 3,
+        width = 23,
+        height = 16,
+        direction = "down",
+        health = 100,
+        damage = 10
+    ) {
         this.scope = scope;
         // per rendere il codice piu leggibile 
         // passiamo anche un parametro state nella classe 
-        this.state = scope.state || {};
+        this.state = scope.state;
+
         this.position = position;
         this.moveSpeed = moveSpeed;
         this.width = width;
         this.height = height;
+        // salute attuale dell'entità
+        this.currentHealth = health;
+        // salute massima dell'entità
+        this.maxHealth = health;
+        this.direction = direction; // direzione in cui si muove l'entità
+        this.damage = damage; // danno che infligge l'entità
     }
 
     render(color = '#ff44ff') {
@@ -36,9 +52,13 @@ export class Entity {
         // isBorder: se l'oggetto con cui è avvenuta la collisione è un bordo
         // isSolid: se l'oggetto con cui è avvenuta la collisione è solido
         let collision = false;
-        let isDeadly = false;
         let isBorder = false;
-        let isSolid = false;
+
+        // Verifica che state.entities sia una Map
+        if (!this.scope) {
+            console.error("state.entities non è una Map o è undefined");
+            return { collision: false };
+        }
 
         // controlliamo i limiti del canvas
         if (nextX < 0 || nextX + this.width > this.scope.constants.width ||
@@ -51,9 +71,12 @@ export class Entity {
         }
 
         // controlliamo le collisioni con gli altri oggetti
-        const entities = Object.values(this.state.entities);
-        for (const entity of entities) {
-            if (this !== entity && 
+        const entities = this.state.entities;
+        // ci serve per tenere traccia dell'entità con cui è avvenuta la collisione
+        let entityCollided;
+
+        for (const entity of entities.keys()) {
+            if (this !== entity &&
                 nextX < entity.position.x + entity.width &&
                 nextX + this.width > entity.position.x &&
                 nextY < entity.position.y + entity.height &&
@@ -62,12 +85,9 @@ export class Entity {
                 // console.log('Collision detected with', entity);
 
                 collision = true;
+                entityCollided = entity;
             }
         }
-        return {collision, isDeadly, isBorder, isSolid};
-    }
-
-    getEntity() {
-        return this;
+        return { collision, isBorder, entityCollided };
     }
 }
