@@ -1,4 +1,7 @@
 import * as canvasUtils from './utils/utils.canvas.js';
+import { gameUpdate } from './core/game.update.js';
+import { gameRender } from './core/game.render.js';
+import { gameLoop } from './core/game.loop.js';
 
 let $container = document.getElementById('container');
 
@@ -15,7 +18,7 @@ export default class Game {
 
         // generateCanvas ritorna sia a canvas che context
         const { canvas, context } = canvasUtils.generateCanvas(width, height);
-        
+
         this.viewport = canvas;
         this.context = context;
         this.viewport.id = 'gameViewport';
@@ -23,8 +26,9 @@ export default class Game {
         // inseriamo il canvas nel container prima di qualsiasi altro elemento
         $container.insertBefore(this.viewport, $container.firstChild);
 
-        this.context.font = '64px Arial';
-        this.context.fillText('padre pio un grande padre', 48, 48, 400);
+        this.update = gameUpdate(this);
+        this.render = gameRender(this);
+        this.loop = gameLoop.bind(this);
 
         return this;
     }
