@@ -8,18 +8,9 @@ export class GameUpdate {
 
     update() {
         // Aggiorna tutte le entità se presenti
-        if (this.state.entities && Array.isArray(this.state.entities)) {
-            for (let entity of this.state.entities) {
-                if (typeof entity.update === 'function') {
-                    entity.update();
-                }
-            }
-        } else if (this.state.entities) {
-            console.log('GameUpdate: updating player entity');
-            let entity = this.state.entities.player;
-            if (typeof entity.update === 'function') {
-                entity.update();
-            }
+        const entities = Object.values(this.state.entities);
+        for (const entity of entities) {
+            entity.update(); // Itera su ogni entità
         }
     }
 

@@ -11,7 +11,7 @@ export class GameRender {
         const { scope, width, height } = this;
 
         // puliamo il canvas
-        scope.context.clearRect(0, 0, width, height);
+        this.clearCanvas(scope.context, width, height);
 
         // disegniamo un rettangolo rosso
         scope.context.fillStyle = 'gray';
@@ -19,29 +19,23 @@ export class GameRender {
 
         // disegniamo un testo
         scope.context.fillStyle = 'white';
-        scope.context.font = '24px Arial';
-        scope.context.fillText('Game Render', 10, 30);
+        scope.context.font = '16px Arial';
 
         if (scope.constants.showFps) {
             // se showFps è true, disegniamo il frame rate
-            scope.context.fillText(`FPS: ${Math.round(scope.constants.targetFps)}`, 10, 50);
+            scope.context.fillText(`FPS: ${Math.round(scope.constants.targetFps)}`, width - 100, 30);
         }
 
 
         if (this.state.hasOwnProperty('entities')) {
-            if (this.state.entities && Array.isArray(this.state.entities)) {
-                for (let entity of this.state.entities) {
-                    if (typeof entity.render === 'function') {
-                        entity.render();
-                    }
-                }
-            } else if (this.state.entities) {
-                console.log('GameUpdate: updating player entity');
-                let entity = this.state.entities.player;
-                if (typeof entity.render === 'function') {
-                    entity.render();
-                }
+            const entities = Object.values(this.state.entities);
+            for (const entity of entities) {
+                entity.render() 
             }
         }
+    }
+
+    clearCanvas(context, width, height) {
+        context.clearRect(0, 0, width, height);
     }
 }

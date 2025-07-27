@@ -2,7 +2,8 @@ import * as canvasUtils from './utils/utils.canvas.js';
 import { GameUpdate } from './core/game.update.js';
 import { GameRender } from './core/game.render.js';
 import { GameLoop } from './core/game.loop.js';
-import { Player } from './players/player.js';
+import { Player } from './entities/player.js';
+import { Enemy } from './entities/enemy.js';
 
 let $container = document.getElementById('container');
 
@@ -34,6 +35,7 @@ export default class Game {
 
         // inizializziamo il giocatore
         this.createPlayer()
+        this.createEnemy()
 
         // assegnamo ad update un istanza di GameUpdate
         // e render un istanza di GameRender
@@ -49,10 +51,13 @@ export default class Game {
     createPlayer() {
         console.log('Game: creating player');
         this.state.entities = this.state.entities || {};
-        // Instantiate a player as an active entity
-        this.state.entities.player = new Player(
-            this,
-        )
+        this.state.entities.player = new Player(this)
+    }
+
+    createEnemy() {
+        console.log('Game: creating enemy');
+        this.state.entities = this.state.entities || {};
+        this.state.entities.enemy = new Enemy(this);
     }
 }
 

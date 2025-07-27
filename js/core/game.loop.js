@@ -20,10 +20,10 @@ export class GameLoop {
             old: {
                 frameCount: 0,
                 startTime: this.before,
-                sineStart: 0
+                sinceStart: 0
             }
         };
-        
+
         // quando il ciclo viene resettato in secondi
         // quindi in questo caso ogni 5 secondi va resettato il ciclo per mantenere
         // la precisione ed evitare che il frame rate si abbassi
@@ -31,7 +31,7 @@ export class GameLoop {
         // il ciclo di frame rate iniziale sarà new
         this.resetState = 'new'; 
 
-
+        // inizializziamo fps
         this.fps = 0; 
 
         console.log('GameLoop initialized with target FPS:', this.fps);
@@ -48,6 +48,9 @@ export class GameLoop {
         // this.stopLoop serve per 
         // salvare l'id del frame richiesto con requestAnimationFrame
         // in modo tale da poterlo fermare in seguito se necessario
+        // dobbiamo bassare la callback this.mainLoop e fare il bind a this
+        // in modo tale da poter accedere a this.scope e agli altri metodi della classe
+        // mantenendo il giusto contesto di esecuzione
         let stopLoop = window.requestAnimationFrame(this.mainLoop.bind(this));
 
         // tframe è il timestamp del frame corrente (timestamp frame)

@@ -1,22 +1,13 @@
 import { keysDown } from "../utils/utils.keysDown.js";
+import { Entity } from "./entity.js";
 
-export class Player {
-    constructor(scope, position = {x:0, y:0}, moveSpeed=1, width=23, height=16) {
-        this.scope = scope;
-        this.position = position;
-        this.moveSpeed = moveSpeed;
-        this.width = width;
-        this.height = height;
+export class Player extends Entity {
+    constructor(scope, position = {x:0, y:0}, moveSpeed=3, width=23, height=16) {
+        super(scope, position, moveSpeed, width, height);
     }
 
     render() {
-        this.scope.context.fillStyle = '#40d870';
-        this.scope.context.fillRect(
-            this.position.x,
-            this.position.y,
-            this.width, 
-            this.height
-        );
+        super.render("#40d870");
     };
 
     update() {
@@ -40,6 +31,6 @@ export class Player {
     }
 
     getPlayer() {
-        return this;
+        super.getEntity();
     }
 }
