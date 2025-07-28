@@ -56,12 +56,6 @@ export class Entity {
         let collision = false;
         let isBorder = false;
 
-        // Verifica che state.entities sia una Map
-        if (!this.scope) {
-            console.error("state.entities non è una Map o è undefined");
-            return { collision: false };
-        }
-
         // controlliamo i limiti del canvas
         if (nextX < 0 || nextX + this.width > this.scope.constants.width ||
             nextY < 0 || nextY + this.height > this.scope.constants.height) {

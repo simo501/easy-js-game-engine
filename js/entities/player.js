@@ -6,7 +6,7 @@ export class Player extends DynamicEntity {
     constructor(
         scope,
         position = { x: 0, y: 0 },
-        moveSpeed = 3,
+        moveSpeed = 20,
         width = 24,
         height = 24,
         direction = Directions.EAST,
@@ -47,6 +47,8 @@ export class Player extends DynamicEntity {
             this.direction = Directions.DOWN;
             nextY += this.moveSpeed
         }
+
+        if (!keysDown.isPressed.isAny) return
 
         const { collision, isBorder, entityCollided } = this.checkCollision(nextX, nextY);
 

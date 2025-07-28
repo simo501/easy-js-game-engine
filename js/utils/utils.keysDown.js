@@ -25,7 +25,10 @@ export const keysDown = (() => {
             get right() { return right; },
             get up() { return up; },
             get down() { return down; },
-            get space() { return space; } // Space key
+            get space() { return space; }, // Space key
+            get isAny() { // per controllare se almeno un tasto è premuto
+                return left || right || up || down || space;
+            }
         }
     };
 })();
