@@ -56,7 +56,7 @@ export class Entity {
             // allora abbiamo una collisione con il bordo del canvas
             collision = true;
             isBorder = true;
-            // console.log('Collision with border');
+            console.log('Collision with border');
         }
 
         // controlliamo le collisioni con gli altri oggetti

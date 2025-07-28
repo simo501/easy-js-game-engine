@@ -73,12 +73,12 @@ export default class Game {
     createEnemy() {
         const enemy = new Enemy(this, { x: this.constants.width / 2, y: this.constants.height / 2 }, 1, 64, 64);
         this.state.entities.set(enemy, { type: 'enemy' });
-    }
+   }
 
-    createBullet(position = { x: 100, y: 0 }, moveSpeed = 5) {
-        const bullet = new Bullet(this, position, moveSpeed);
-        this.state.entities.set(bullet, { type: 'bullet' });
-    }
+//    createBullet(position = { x: 100, y: 0 }, moveSpeed = 5) {
+//        const bullet = new Bullet(this, position, moveSpeed);
+//        this.state.entities.set(bullet, { type: 'bullet' });
+//    }
 
     createBlock(position = { x: 200, y: 200 }, width = 50, height = 50) {
         const block = new Block(this, position, width, height);

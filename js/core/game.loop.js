@@ -6,10 +6,11 @@ export class GameLoop {
         this.fps = scope.constants.targetFps;
         // 1 tick per millisecondo
         // 60 fps = 1000 ms / 60 = 16.666667
-        this.fpsInterval = 1000 / this.fps;
-        this.before = window.performance.now(); // il timestamp di inizio
+        this.fpsInterval = 1000 / this.fps; //ogni quanto tempo deve passare tra un frame e l'altro
+        this.before = window.performance.now(); // quando è stato disegnato l'ultimo frame
 
-        // Set up an object to contain our alternating FPS calculations
+        // Usiamo un oggetto cycles per capire quanto è stabile il frame rate
+        // Ogni ciclo misura il numero di frame e il tempo trascorso dall'inizio del ciclo
         this.cycles = {
             new: {
                 frameCount: 0, // Frames da quando inizia il ciclo
@@ -24,7 +25,7 @@ export class GameLoop {
             }
         };
 
-        // quando il ciclo viene resettato in secondi
+        // Ogni 5 secondi resettiamo il ciclo per evitare errori accumulati
         // quindi in questo caso ogni 5 secondi va resettato il ciclo per mantenere
         // la precisione ed evitare che il frame rate si abbassi
         this.resetInterval = 5; 
@@ -43,12 +44,11 @@ export class GameLoop {
     mainLoop(tframe) {
         // posizionando in questo modo requestAnimationFrame all'inizio del this 
         // essa verra eseguita in this proprio perchè stiamo dicendo al browser 
-        // di richiedere un nuovo frame e di eseguire la funzione this.main al nuovo frame
-        // this.stopLoop serve per 
-        // salvare l'id del frame richiesto con requestAnimationFrame
+        // di richiedere un nuovo frame e di eseguire la funzione this.mainLoop al nuovo frame
+        // this.stopLoop serve per salvare l'id del frame richiesto con requestAnimationFrame
         // in modo tale da poterlo fermare in seguito se necessario
-        // dobbiamo bassare la callback this.mainLoop e fare il bind a this
-        // in modo tale da poter accedere a this.scope e agli altri metodi della classe
+        // dobbiamo passare la callback this.mainLoop e fare il bind a this
+        // in modo tale da poter accedere anche nel nuovo frame a this.scope e agli altri metodi della classe
         // mantenendo il giusto contesto di esecuzione
         let stopLoop = window.requestAnimationFrame(this.mainLoop.bind(this));
 
@@ -82,9 +82,9 @@ export class GameLoop {
             }
 
             activeCycle = this.cycles[this.resetState];
+            // CALCOLO PRECISO DEGLI FPS
             // 1000 sono i millisecondi in un secondo
-            // sincestart (ms) / framecount
-            // ci dice quanto passa in media tra un frame e l'altro in millisecondi
+            // sincestart (ms) / framecount : ci dice quanto passa in media tra un frame e l'altro in millisecondi
             // dividendo 1000 per questo valore otteniamo il frame rate
             this.fps =
                 Math.round(1000 / (activeCycle.sinceStart / activeCycle.frameCount) * 100) / 100;
