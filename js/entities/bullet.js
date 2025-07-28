@@ -1,5 +1,6 @@
 import { Entity } from "./entity.js";
 import { Directions } from "../utils/utils.directions.js";
+import { DynamicEntity } from "./dynamic.entity.js";
 
 export class Bullet extends Entity {
     constructor(
@@ -42,8 +43,9 @@ export class Bullet extends Entity {
         const { collision, isBorder, entityCollided } = this.checkCollision(nextX, nextY);
 
         if (collision) {
-            // se c'è una collisione, rimuoviamo il proiettile
-            if (entityCollided) {
+            // se c'e' una collisione con un blocco con un entità dinamica
+            // allora dobbiamo rimuovere la salute a quell'entità
+            if (entityCollided instanceof DynamicEntity) {
                 entityCollided.takeDamage(this.damage);
             }
             this.die()

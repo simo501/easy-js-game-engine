@@ -14,7 +14,15 @@ export class DynamicEntity extends Entity {
         damage = 10,
         maxShoots = 10
     ) {
-        super(scope, position, moveSpeed, width, height, direction, health, damage);
+        super(scope, position, moveSpeed, width, height, direction, damage);
+
+        // salute attuale dell'entità
+        this.health = {
+            currentHealth: health,
+            maxHealth: health
+        }
+        // salute massima dell'entità
+
         this.shootProperties = {
             availableShoots: maxShoots, // numero di proiettili disponibili
             maxShoots: maxShoots, // numero massimo di proiettili che
@@ -80,4 +88,10 @@ export class DynamicEntity extends Entity {
         this.state.entities.set(bullet, { type: 'bullet' });
     }
 
+    takeDamage(amount) {
+        this.health.currentHealth -= amount;
+        if (this.health.currentHealth <= 0) {
+            this.die();
+        }
+    }
 }

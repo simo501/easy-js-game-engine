@@ -6,24 +6,17 @@ export class Entity {
         width = 23,
         height = 16,
         direction = "down",
-        health = 100,
         damage = 10,
     ) {
         this.scope = scope;
         // per rendere il codice piu leggibile 
         // passiamo anche un parametro state nella classe 
         this.state = scope.state;
-
         this.position = position;
         this.moveSpeed = moveSpeed;
         this.width = width;
         this.height = height;
-        // salute attuale dell'entità
-        this.health = {
-            currentHealth: health,
-            maxHealth: health
-        }
-        // salute massima dell'entità
+        
         this.direction = direction; // direzione in cui si muove l'entità
         this.damage = damage; // danno che infligge l'entità
     }
@@ -85,13 +78,6 @@ export class Entity {
             }
         }
         return { collision, isBorder, entityCollided };
-    }
-
-    takeDamage(amount) {
-        this.health.currentHealth -= amount;
-        if (this.health.currentHealth <= 0) {
-            this.die();
-        }
     }
 
     die() {
