@@ -19,6 +19,22 @@ export const keysDown = (() => {
         if (ev.key === ' ') { space = false; } // Space key
     };
 
+    document.getElementById('btn-left').onmousedown = () => { left = true; };
+    document.getElementById('btn-left').onmouseup = () => { left = false; };
+
+    document.getElementById('btn-right').onmousedown = () => { right = true; };
+    document.getElementById('btn-right').onmouseup = () => { right = false; };
+
+    document.getElementById('btn-up').onmousedown = () => { up = true; };
+    document.getElementById('btn-up').onmouseup = () => { up = false; };
+
+    document.getElementById('btn-down').onmousedown = () => { down = true; };
+    document.getElementById('btn-down').onmouseup = () => { down = false; };
+
+    document.getElementById('btn-space').onmousedown = () => { space = true; };
+    document.getElementById('btn-space').onmouseup = () => { space = false; };
+
+
     return {
         isPressed: {
             get left() { return left; },
