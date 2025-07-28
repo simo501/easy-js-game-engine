@@ -19,6 +19,8 @@ export class DynamicEntity extends Entity {
             availableShoots: maxShoots, // numero di proiettili disponibili
             maxShoots: maxShoots, // numero massimo di proiettili che
             defaultDamage: damage, // danno di default dei proiettili
+            lastShootTime: 0,
+            reloadTime: 100 // tempo di ricarica in millisecondi
         }
     }
 
@@ -28,8 +30,10 @@ export class DynamicEntity extends Entity {
         bulletWidth = 10,
         bulletHeight = 10,
         bulletHealth = 10,
-        bulletDamage = this.damage
+        bulletDamage = this.damage,
+        tick
     ) {
+        if (this.shootProperties.lastShootTime + this.shootProperties.reloadTime > tick) return;
 
         // implementazione del metodo di sparo, che può essere usato da Player e Enemy
         let bulletX = 0, bulletY = 0;
@@ -59,6 +63,8 @@ export class DynamicEntity extends Entity {
 
         // l'oggetto bullet rimane vivo fino a che ci sono riferimenti ad esso
         // quindi lo aggiungiamo allo stato del gioco
+        this.shootProperties.lastShootTime = tick;
+
         const bullet = new Bullet(
             this.scope,
             bulletPosition,

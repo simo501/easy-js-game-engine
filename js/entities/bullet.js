@@ -22,7 +22,7 @@ export class Bullet extends Entity {
         super.render("#ffffff");
     }
 
-    update() {
+    update(tick) {
         let nextX = this.position.x;
         let nextY = this.position.y;
         
@@ -39,9 +39,14 @@ export class Bullet extends Entity {
             nextY -= this.moveSpeed;
         }
 
-        if (this.checkCollision(nextX, nextY).collision) {
+        const { collision, isBorder, entityCollided } = this.checkCollision(nextX, nextY);
+
+        if (collision) {
             // se c'è una collisione, rimuoviamo il proiettile
-            this.removeBullet();
+            if (entityCollided) {
+                entityCollided.takeDamage(this.damage);
+            }
+            this.die()
             return;
         }
 
@@ -53,8 +58,7 @@ export class Bullet extends Entity {
 
     removeBullet() {
         // rimuoviamo il proiettile dallo stato del gioco
-        this.entityOrigin
-        this.state.entities.delete(this);
+        this.die();
     }
 
 }

@@ -6,11 +6,11 @@ export class GameUpdate {
     }
 
 
-    update() {
+    update(tick) {
         // Aggiorna tutte le entità se presenti
         const entities = this.state.entities;
         for (const entity of entities.keys()) {
-            entity.update(); // Itera su ogni entità
+            entity.update(tick); // Itera su ogni entità
         }
     }
 }

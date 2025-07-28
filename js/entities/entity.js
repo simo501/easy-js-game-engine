@@ -38,7 +38,7 @@ export class Entity {
         );
     };
 
-    update() { }
+    update(tick) { }
 
     checkCollision(nextX, nextY) {
         // qui dovremmo implementare la logica per controllare le collisioni
@@ -91,5 +91,16 @@ export class Entity {
             }
         }
         return { collision, isBorder, entityCollided };
+    }
+
+    takeDamage(amount) {
+        this.health.currentHealth -= amount;
+        if (this.health.currentHealth <= 0) {
+            this.die();
+        }
+    }
+
+    die() {
+        this.state.entities.delete(this);
     }
 }

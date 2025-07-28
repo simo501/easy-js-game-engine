@@ -9,7 +9,7 @@ export class Block extends Entity {
         super.render("#ff0000");
     }
 
-    update() {
+    update(tick) {
         // i blocchi non si muovono, ma potrebbero avere logiche relative alla vita
         // intesa come resistenza a colpi o altro
     }

@@ -4,26 +4,26 @@ import { DynamicEntity } from "./dynamic.entity.js";
 
 export class Player extends DynamicEntity {
     constructor(
-        scope, 
-        position = { x: 0, y: 0 }, 
-        moveSpeed = 3, 
-        width = 24, 
-        height = 24, 
-        direction = Directions.EAST, 
-        health = 100, 
+        scope,
+        position = { x: 0, y: 0 },
+        moveSpeed = 3,
+        width = 24,
+        height = 24,
+        direction = Directions.EAST,
+        health = 100,
         damage = 10
     ) {
         super(scope, position, moveSpeed, width, height, direction, health, damage);
     }
 
     render() {
-        console.log(this)
         super.render("#40d870");
         this.scope.context.fillStyle = "#FFFFFF";
         this.scope.context.fillText(`Player health: ${this.health.currentHealth}`, 10, 30);
     };
 
-    update() {
+    update(tick) {
+        console.log(`Player update tick: ${tick}`);
         // per ora collision prevenirà solo il movimento
         let nextX = this.position.x;
         let nextY = this.position.y;
@@ -48,8 +48,8 @@ export class Player extends DynamicEntity {
             nextY += this.moveSpeed
         }
 
-        const {collision, isBorder, entityCollided} = this.checkCollision(nextX, nextY);
-        
+        const { collision, isBorder, entityCollided } = this.checkCollision(nextX, nextY);
+
         if (entityCollided && entityCollided.damage > 0) {
             this.health.currentHealth -= entityCollided.damage;
         }
@@ -60,11 +60,16 @@ export class Player extends DynamicEntity {
         this.position.x = nextX;
         this.position.y = nextY;
 
-        console.log(`Player position x:${this.position.x} + ${this.width}, y: ${this.position.y} + ${this.height}, direction: ${this.direction}`);
+        // console.log(`Player position x:${this.position.x} + ${this.width}, y: ${this.position.y} + ${this.height}, direction: ${this.direction}`);
 
         if (keysDown.isPressed.space) {
-            // sparo
-            this.shoot();
+            this.shoot(
+                5,
+                10,
+                10,
+                10,
+                this.damage,
+                tick);
         }
 
         // qui dovremmo controllare i limiti del canvas

@@ -5,8 +5,8 @@ export class Enemy extends DynamicEntity {
         super(scope, position, moveSpeed, width, height);
     }
 
-    update() {}
+    update(tick) {}
 
-    
+
 
 }
