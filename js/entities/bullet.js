@@ -10,10 +10,12 @@ export class Bullet extends Entity {
         height = 10,
         direction = Directions.EAST,
         health = 10,
-        damage = 10
+        damage = 10,
+        entityOrigin
     ) {
 
         super(scope, position, moveSpeed, width, height, direction, health, damage);
+        this.entityOrigin = this.entityOrigin
     }
 
     render() {
@@ -51,6 +53,7 @@ export class Bullet extends Entity {
 
     removeBullet() {
         // rimuoviamo il proiettile dallo stato del gioco
+        this.entityOrigin
         this.state.entities.delete(this);
     }
 

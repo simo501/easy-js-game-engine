@@ -7,7 +7,7 @@ export class Entity {
         height = 16,
         direction = "down",
         health = 100,
-        damage = 10
+        damage = 10,
     ) {
         this.scope = scope;
         // per rendere il codice piu leggibile 

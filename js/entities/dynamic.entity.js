@@ -67,7 +67,8 @@ export class DynamicEntity extends Entity {
             bulletHeight,
             this.direction,
             bulletHealth,
-            bulletDamage
+            bulletDamage,
+            this // campo entityOrigin per tenere traccia dell'entità che ha sparato il proiettile
         );
 
         this.state.entities.set(bullet, { type: 'bullet' });
