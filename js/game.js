@@ -40,7 +40,6 @@ export default class Game {
 
         // inizializziamo il giocatore
         this.createEnemy()
-        this.createBullet()
         this.createPlayer()
         this.createBlock()
         this.createBlock({ x: 300, y: 300 }, 100, 100);

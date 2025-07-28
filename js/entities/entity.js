@@ -82,7 +82,7 @@ export class Entity {
                 nextY < entity.position.y + entity.height &&
                 nextY + this.height > entity.position.y) {
                 // Collisione rilevata
-                // console.log('Collision detected with', entity);
+                console.log(nextX, nextY, this, 'has detected a collision detected with', entity);
 
                 collision = true;
                 entityCollided = entity;

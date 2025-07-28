@@ -3,11 +3,11 @@ export class GameRender {
         this.scope = scope;
         this.width = scope.constants.width;
         this.height = scope.constants.height;
-        this.state = scope.state || {};
-        this.render()
+        this.state = scope.state;
+        this.render(0)
     }
 
-    render() {
+    render(fps) {
         // destructuriamo le proprietà necessarie
         const { scope, width, height } = this;
 
@@ -24,7 +24,7 @@ export class GameRender {
 
         if (scope.constants.showFps) {
             // se showFps è true, disegniamo il frame rate
-            scope.context.fillText(`FPS: ${Math.round(scope.constants.targetFps)}`, width - 100, 30);
+            scope.context.fillText(`FPS: ${fps}`, width - 100, 30);
         }
 
 

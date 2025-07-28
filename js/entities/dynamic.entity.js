@@ -12,28 +12,41 @@ export class DynamicEntity extends Entity {
         direction = Directions.EAST,
         health = 100,
         damage = 10,
-        maxShoots = 1
+        maxShoots = 10
     ) {
         super(scope, position, moveSpeed, width, height, direction, health, damage);
         this.availableShoots = maxShoots; // numero di proiettili disponibili
         this.maxShoots = maxShoots; // numero massimo di proiettili che può sparare
     }
 
-    shoot() {
-        if (this.availableShoots < 1) {
-            console.log("Non puoi sparare, hai esaurito i proiettili!");
-            return;
-        }
+    // la direzione di sparo è determinata correttamente da Bullet.js
+    shoot(
+        bulletSpeed = 5,
+        bulletWidth = 10,
+        bulletHeight = 10,
+        bulletHealth = 10,
+        bulletDamage = this.damage
+    ) {
 
         // implementazione del metodo di sparo, che può essere usato da Player e Enemy
-        let x = 0, y = 0, moveSpeed = 0;
+        let bulletX = 0, bulletY = 0;
+
+
         if (this.direction === Directions.EAST) {
-            x = this.position.x + this.width + 5;
-            y = this.position.y + this.height / 2;
-            moveSpeed += 5
+            bulletX = this.position.x + this.width;
+            bulletY = this.position.y + this.height / 2;
+        } else if (this.direction === Directions.SOUTH) {
+            bulletX = this.position.x + this.width / 2;
+            bulletY = this.position.y + this.height;
+        } else if (this.direction === Directions.WEST) {
+            bulletX = this.position.x - bulletWidth;
+            bulletY = this.position.y + this.height / 2;
+        } else if (this.direction === Directions.NORTH) {
+            bulletX = this.position.x + this.width / 2;
+            bulletY = this.position.y - bulletHeight;
         }
 
-        let bulletPosition = { x: x, y: y };
+        let bulletPosition = { x: bulletX, y: bulletY };
 
         console.log(`Sparo in direzione ${this.direction} da posizione x:${bulletPosition.x},y: ${bulletPosition.y}`);
 
@@ -42,18 +55,15 @@ export class DynamicEntity extends Entity {
         const bullet = new Bullet(
             this.scope,
             bulletPosition,
-            this.moveSpeed,
-            10,
-            10,
+            bulletSpeed,
+            bulletWidth,
+            bulletHeight,
             this.direction,
-            10,
-            this.damage
+            bulletHealth,
+            bulletDamage
         );
 
-
         this.state.entities.set(bullet, { type: 'bullet' });
-
-        this.availableShoots -= 1; // decrementiamo il numero di proiettili disponibili
     }
 
 }

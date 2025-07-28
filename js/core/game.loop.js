@@ -63,9 +63,10 @@ export class GameLoop {
         // ad activeCycle passiamo il ciclo attualmente attivo
         let activeCycle;
 
-        // se il tempo richiesto per il frame è maggiore del tempo che ci aspettiamo
-        // riallineiamo il timestamp di before per non accumulare ritardi
-        // e per evitare che il frame rate si abbassi
+        // eseguiamo il rendering e l'update del gioco solo quando elapsed 
+        // è maggiore del tempo che ci aspettiamo passi tra i frame
+        // per mantenere il frame rate stabile
+        // per questo before viene aggiornato solo in questo caso e non prima
         if (elapsed > this.fpsInterval) {
             // sottraiamo a now il tempo trascorso dall'ultimo frame
             // in modulo con il tempo che ci aspettiamo passi tra i frame
@@ -112,13 +113,13 @@ export class GameLoop {
                 this.resetState = (this.resetState === 'new' ? 'old' : 'new');
             }
 
-            // aggiorniamo lo stato del gioco
+            // aggiorniamo lo stato del gioco CON SIDE EFFECT
             // chiamando il metodo update di GameUpdate
-            this.scope.state = this.scope.update.update(now);
+            this.scope.update.update(now);
             
             // chiamiamo il metodo render di GameRender
             // per disegnare il gioco sul canvas
-            this.scope.render.render();
+            this.scope.render.render(this.fps);
 
         }
     };

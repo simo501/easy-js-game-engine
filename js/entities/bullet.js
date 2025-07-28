@@ -21,11 +21,18 @@ export class Bullet extends Entity {
     update() {
         let nextX = this.position.x;
         let nextY = this.position.y;
+        
         if (this.direction === Directions.EAST) {
             nextX += this.moveSpeed;
         }
         else if (this.direction === Directions.SOUTH) {
             nextY += this.moveSpeed;
+        }
+        else if (this.direction === Directions.WEST) {
+            nextX -= this.moveSpeed;
+        }
+        else if (this.direction === Directions.NORTH) {
+            nextY -= this.moveSpeed;
         }
 
         if (this.checkCollision(nextX, nextY).collision) {

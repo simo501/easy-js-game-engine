@@ -11,7 +11,8 @@ export class Player extends DynamicEntity {
         height = 16, 
         direction = Directions.EAST, 
         health = 100, 
-        damage = 10) {
+        damage = 10
+    ) {
         super(scope, position, moveSpeed, width, height, direction, health, damage);
     }
 
