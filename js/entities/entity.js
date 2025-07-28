@@ -19,9 +19,11 @@ export class Entity {
         this.width = width;
         this.height = height;
         // salute attuale dell'entità
-        this.currentHealth = health;
+        this.health = {
+            currentHealth: health,
+            maxHealth: health
+        }
         // salute massima dell'entità
-        this.maxHealth = health;
         this.direction = direction; // direzione in cui si muove l'entità
         this.damage = damage; // danno che infligge l'entità
     }

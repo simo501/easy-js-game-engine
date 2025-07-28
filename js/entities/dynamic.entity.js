@@ -15,8 +15,11 @@ export class DynamicEntity extends Entity {
         maxShoots = 10
     ) {
         super(scope, position, moveSpeed, width, height, direction, health, damage);
-        this.availableShoots = maxShoots; // numero di proiettili disponibili
-        this.maxShoots = maxShoots; // numero massimo di proiettili che può sparare
+        this.shootProperties = {
+            availableShoots: maxShoots, // numero di proiettili disponibili
+            maxShoots: maxShoots, // numero massimo di proiettili che
+            defaultDamage: damage, // danno di default dei proiettili
+        }
     }
 
     // la direzione di sparo è determinata correttamente da Bullet.js
@@ -32,23 +35,27 @@ export class DynamicEntity extends Entity {
         let bulletX = 0, bulletY = 0;
 
 
+        // dobbiamo rimuovere in certi casi la width e l'height del proiettile
+        // perchè crescono da sinistra a destra e dall'alto verso il basso
+        // quindi se non rimuoviamo la width e l'height del proiettile
+        // il proiettile parte da dentro l'entità dinamica
         if (this.direction === Directions.EAST) {
             bulletX = this.position.x + this.width;
-            bulletY = this.position.y + this.height / 2;
+            bulletY = this.position.y + (this.height - bulletHeight) / 2;
         } else if (this.direction === Directions.SOUTH) {
-            bulletX = this.position.x + this.width / 2;
+            bulletX = this.position.x + (this.width - bulletWidth) / 2;
             bulletY = this.position.y + this.height;
         } else if (this.direction === Directions.WEST) {
             bulletX = this.position.x - bulletWidth;
-            bulletY = this.position.y + this.height / 2;
+            bulletY = this.position.y + (this.height - bulletHeight) / 2;
         } else if (this.direction === Directions.NORTH) {
-            bulletX = this.position.x + this.width / 2;
+            bulletX = this.position.x + (this.width - bulletWidth) / 2;
             bulletY = this.position.y - bulletHeight;
         }
 
         let bulletPosition = { x: bulletX, y: bulletY };
 
-        console.log(`Sparo in direzione ${this.direction} da posizione x:${bulletPosition.x},y: ${bulletPosition.y}`);
+        // console.log(`Sparo in direzione ${this.direction} da posizione x:${bulletPosition.x},y: ${bulletPosition.y}`);
 
         // l'oggetto bullet rimane vivo fino a che ci sono riferimenti ad esso
         // quindi lo aggiungiamo allo stato del gioco

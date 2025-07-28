@@ -7,8 +7,8 @@ export class Player extends DynamicEntity {
         scope, 
         position = { x: 0, y: 0 }, 
         moveSpeed = 3, 
-        width = 23, 
-        height = 16, 
+        width = 24, 
+        height = 24, 
         direction = Directions.EAST, 
         health = 100, 
         damage = 10
@@ -17,7 +17,10 @@ export class Player extends DynamicEntity {
     }
 
     render() {
+        console.log(this)
         super.render("#40d870");
+        this.scope.context.fillStyle = "#FFFFFF";
+        this.scope.context.fillText(`Player health: ${this.health.currentHealth}`, 10, 30);
     };
 
     update() {
@@ -45,7 +48,12 @@ export class Player extends DynamicEntity {
             nextY += this.moveSpeed
         }
 
-        let collision = this.checkCollision(nextX, nextY).collision;
+        const {collision, isBorder, entityCollided} = this.checkCollision(nextX, nextY);
+        
+        if (entityCollided && entityCollided.damage > 0) {
+            this.health.currentHealth -= entityCollided.damage;
+        }
+
         if (collision) return;
 
         // se non c'è collisione, aggiorniamo la posizione del player

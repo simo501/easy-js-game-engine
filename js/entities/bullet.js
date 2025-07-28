@@ -2,14 +2,16 @@ import { Entity } from "./entity.js";
 import { Directions } from "../utils/utils.directions.js";
 
 export class Bullet extends Entity {
-    constructor(scope,
+    constructor(
+        scope,
         position = { x: 100, y: 0 },
         moveSpeed = 5,
         width = 10,
         height = 10,
         direction = Directions.EAST,
         health = 10,
-        damage = 10) {
+        damage = 10
+    ) {
 
         super(scope, position, moveSpeed, width, height, direction, health, damage);
     }
