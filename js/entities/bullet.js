@@ -1,6 +1,7 @@
 import { Entity } from "./entity.js";
 import { Directions } from "../utils/utils.directions.js";
 import { Block } from "./block.js";
+import { Particle } from './particles.js';
 
 
 export class Bullet extends Entity {
@@ -104,16 +105,45 @@ export class Bullet extends Entity {
                 nextX -= this.moveSpeed
             }
             return;
+        }
+        // Se tutto ok, aggiorna la posizione
+        this.position.x = nextX;
+        this.position.y = nextY;
     }
-    // Se tutto ok, aggiorna la posizione
-    this.position.x = nextX;
-    this.position.y = nextY;
-}
+
+
+    spawnParticles() {
+        const numParticles = 4;
+        const baseSpeed = 2;
+
+        for (let i = 0; i < numParticles; i++) {
+            const angle = (Math.PI * 2 / numParticles) * i;
+
+            const velocity = {
+                x: Math.cos(angle) * baseSpeed,
+                y: Math.sin(angle) * baseSpeed,
+            };
+
+            const particle = new Particle(
+                this.scope,
+                {
+                    x: this.position.x + this.width / 2,
+                    y: this.position.y + this.height / 2,
+                },
+                velocity,
+                300 // durata in ms
+            );
+
+            this.state.entities.set(particle, { type: 'particle' });
+        }
+    }
+
 
 
     removeBullet() {
-        // rimuoviamo il proiettile dallo stato del gioco
+        this.spawnParticles();
         this.die();
     }
+
 
 }
