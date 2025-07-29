@@ -96,7 +96,8 @@ export class Bullet extends Entity {
             if (x != nextX) x += addX;
             if (y != nextY) y += addY;
             // è il metodo check collision che cambia posizione
-            this.checkCollision(x, y);
+            const { collision, isBorder, entityCollided } = this.checkCollision(x, y);
+            if (collision && entityCollided instanceof DynamicEntity) break;
         }
 
         // Verifica collisioni
@@ -119,11 +120,6 @@ export class Bullet extends Entity {
     checkCollision(nextX, nextY) {
         const { collision, isBorder, entityCollided } = super.checkCollision(nextX, nextY);
 
-        // Se tocca un bordo, inverte la direzione per rimbalzare
-        if (collision && (isBorder || (entityCollided && entityCollided instanceof Block))) {
-
-        }
-
 
         if (collision) {
             if (isBorder || (entityCollided && entityCollided instanceof Block)) {
@@ -143,15 +139,17 @@ export class Bullet extends Entity {
                     this.direction = Directions.NORTH;
                     // nextX -= this.moveSpeed
                 }
-                return;
+                return { collision, isBorder, entityCollided };
             } else if (entityCollided instanceof DynamicEntity) {
+                console.log(entityCollided.health)
                 entityCollided.takeDamage(this.damage)
             } else if (entityCollided instanceof Bullet) {
                 this.changePosition(nextX, nextY);
-                return;
+                return { collision, isBorder, entityCollided };
             }
             this.die();
         }
+        return { collision, isBorder, entityCollided };
     }
 
 
