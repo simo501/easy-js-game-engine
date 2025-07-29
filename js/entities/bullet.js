@@ -2,6 +2,7 @@ import { Entity } from "./entity.js";
 import { Directions } from "../utils/utils.directions.js";
 import { Block } from "./block.js";
 import { Particle } from './particles.js';
+import { DynamicEntity } from "./dynamic.entity.js";
 
 
 export class Bullet extends Entity {
@@ -13,14 +14,12 @@ export class Bullet extends Entity {
         height = 10,
         direction = Directions.EAST,
         health = 10,
-        damage = 10, 
+        damage = 10,
         entityOrigin
     ) {
-
         super(scope, position, moveSpeed, width, height, direction, health, damage);
         this.entityOrigin = this.entityOrigin
-        this.createdAt = performance.now(); // momento in cui il proiettile è stato creato
-        this.timeToLive = 5000; // tempo di vita del proiettile in millisecondi
+        this.timeToLive = 3000; // tempo di vita del proiettile in millisecondi
     }
 
     render() {
@@ -43,72 +42,116 @@ export class Bullet extends Entity {
         const scaledHeight = this.height * scale;
 
         context.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-        context.fillRect(
-            this.position.x + (this.width - scaledWidth) / 2,
-            this.position.y + (this.height - scaledHeight) / 2,
-            scaledWidth,
-            scaledHeight
+        // context.fillRect(
+        //     this.position.x + (this.width - scaledWidth) / 2,
+        //     this.position.y + (this.height - scaledHeight) / 2,
+        //     scaledWidth,
+        //     scaledHeight
+        // );
+        context.beginPath();
+        context.arc(
+            this.position.x + this.width / 2,
+            this.position.y + this.height / 2,
+            this.width / 2,
+            0,
+            Math.PI * 2
         );
+        context.fill();
     }
 
 
 
     update(tick) {
-        let nextX = this.position.x;
-        let nextY = this.position.y;
 
+        // se il proiettile vive da troppo tempo lo rimuoviamo
         if (tick - this.createdAt > this.timeToLive) {
             this.removeBullet();
             return;
         }
 
+        let nextX = this.position.x;
+        let nextY = this.position.y;
 
-    // Movimento base
+        let addX = 0, addY = 0;
+
+
+        // Movimento base
         if (this.direction === Directions.EAST) {
             nextX += this.moveSpeed;
+            addX += 1;
         } else if (this.direction === Directions.SOUTH) {
             nextY += this.moveSpeed;
+            addY += 1;
         } else if (this.direction === Directions.WEST) {
             nextX -= this.moveSpeed;
+            addX -= 1;
         } else if (this.direction === Directions.NORTH) {
             nextY -= this.moveSpeed;
+            addY -= 1;
         }
 
-    // Verifica collisioni
-        const { collision, isBorder, entityCollided } = this.checkCollision(nextX, nextY);
+        let x = this.position.x, y = this.position.y;
 
-        const info = this.state.entities.get(entityCollided);
+        while (x != nextX || y != nextY) {
+            if (x != nextX) x += addX;
+            if (y != nextY) y += addY;
+            // è il metodo check collision che cambia posizione
+            this.checkCollision(x, y);
+        }
 
-    // Collisione con nemico
-        if (collision && info?.type === 'enemy') {
-            entityCollided.takeDamage(this.damage);
-            this.die();
-            return;
+        // Verifica collisioni
+        // const { collision, isBorder, entityCollided } = this.checkCollision(nextX, nextY);
+
+        // const info = this.state.entities.get(entityCollided);
+
+        // Collisione con nemico
+        // if (collision && info?.type === 'enemy') {
+        //     entityCollided.takeDamage(this.damage);
+        //     this.die();
+        //     return;
+        // }
+
+        // Se tutto ok, aggiorna la posizione
+        // this.position.x = nextX;
+        // this.position.y = nextY;
     }
 
+    checkCollision(nextX, nextY) {
+        const { collision, isBorder, entityCollided } = super.checkCollision(nextX, nextY);
 
-    // Se tocca un bordo, inverte la direzione per rimbalzare
-        if (collision && (isBorder || entityCollided instanceof Block)) {
-            if (this.direction === Directions.EAST) {
-                this.direction = Directions.WEST;
-                nextX -= this.moveSpeed
-            }else if (this.direction === Directions.WEST){ 
-                this.direction = Directions.EAST;
-                nextX += this.moveSpeed
-            }
-            else if (this.direction === Directions.NORTH){
-                this.direction = Directions.SOUTH;
-                nextY += this.moveSpeed
-            }
-            else if (this.direction === Directions.SOUTH){
-                this.direction = Directions.NORTH;
-                nextX -= this.moveSpeed
-            }
-            return;
+        // Se tocca un bordo, inverte la direzione per rimbalzare
+        if (collision && (isBorder || (entityCollided && entityCollided instanceof Block))) {
+
         }
-        // Se tutto ok, aggiorna la posizione
-        this.position.x = nextX;
-        this.position.y = nextY;
+
+
+        if (collision) {
+            if (isBorder || (entityCollided && entityCollided instanceof Block)) {
+                console.log('Collision with border or block');
+                if (this.direction === Directions.EAST) {
+                    this.direction = Directions.WEST;
+                    // nextX -= this.moveSpeed
+                } else if (this.direction === Directions.WEST) {
+                    this.direction = Directions.EAST;
+                    // nextX += this.moveSpeed
+                }
+                else if (this.direction === Directions.NORTH) {
+                    this.direction = Directions.SOUTH;
+                    // nextY += this.moveSpeed
+                }
+                else if (this.direction === Directions.SOUTH) {
+                    this.direction = Directions.NORTH;
+                    // nextX -= this.moveSpeed
+                }
+                return;
+            } else if (entityCollided instanceof DynamicEntity) {
+                entityCollided.takeDamage(this.damage)
+            } else if (entityCollided instanceof Bullet) {
+                this.changePosition(nextX, nextY);
+                return;
+            }
+            this.die();
+        }
     }
 
 
@@ -144,6 +187,5 @@ export class Bullet extends Entity {
         this.spawnParticles();
         this.die();
     }
-
 
 }

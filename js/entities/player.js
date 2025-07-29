@@ -20,71 +20,64 @@ export class Player extends DynamicEntity {
         super.render("#40d870");
         this.scope.context.fillStyle = "#FFFFFF";
         this.scope.context.fillText(`Player health: ${this.health.currentHealth}`, 10, 30);
-    };
+    }
 
     update(tick) {
-        // per ora collision prevenirà solo il movimento
+        // Se non viene premuto nessun tasto, non facciamo nulla
+        if (!keysDown.isPressed.isAny) return;
+
         let nextX = this.position.x;
         let nextY = this.position.y;
-
-
         let addX = 0, addY = 0;
 
+        // Gestione del movimento
         if (keysDown.isPressed.left) {
             this.direction = Directions.LEFT;
             nextX -= this.moveSpeed;
-            addX -= 1
+            addX -= 1;
         }
 
         if (keysDown.isPressed.right) {
             this.direction = Directions.RIGHT;
-            nextX += this.moveSpeed
-            addX += 1
+            nextX += this.moveSpeed;
+            addX += 1;
         }
 
         if (keysDown.isPressed.up) {
             this.direction = Directions.UP;
-            nextY -= this.moveSpeed
-            addY -= 1
+            nextY -= this.moveSpeed;
+            addY -= 1;
         }
 
         if (keysDown.isPressed.down) {
             this.direction = Directions.DOWN;
-            nextY += this.moveSpeed
-            addY += 1
+            nextY += this.moveSpeed;
+            addY += 1;
         }
 
-        if (!keysDown.isPressed.isAny) return
-
         let collision, isBorder, entityCollided;
-
-        let x = this.position.x
+        let x = this.position.x;
         let y = this.position.y;
-        
-        console.log(x, y, nextX, nextY, 'player update');
 
+        // console.log(x, y, nextX, nextY, 'player update');
+
+        // Movimento incrementale con controllo collisioni
         while (x != nextX || y != nextY) {
             if (x != nextX) x += addX;
             if (y != nextY) y += addY;
-            // è il metodo check collision che cambia posizione
+
             collision, isBorder, entityCollided = this.checkCollision(x, y);
             if (collision) break;
         }
 
-
-        // console.log(`Player position x:${this.position.x} + ${this.width}, y: ${this.position.y} + ${this.height}, direction: ${this.direction}`);
-
+        // Gestione dello sparo
         if (keysDown.isPressed.space) {
-            this.shoot(
-                5,
-                10,
-                10,
-                10,
-                this.damage,
-                tick);
+            this.shoot(5, 10, 10, 10, this.damage, tick);
         }
-
-        // qui dovremmo controllare i limiti del canvas
     }
 
+    checkCollision(nextX, nextY) {
+        // Verifica collisioni tramite il metodo della classe base
+        return super.checkCollision(nextX, nextY, true);
+    }
 }

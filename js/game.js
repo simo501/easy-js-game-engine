@@ -49,9 +49,6 @@ export default class Game {
         this.createBlock({ x: 300, y: 300 }, 100, 100);
 
 
-        console.log(this)
-
-
         // assegnamo ad update un istanza di GameUpdate
         // e render un istanza di GameRender
         // e loop un istanza di GameLoop

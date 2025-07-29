@@ -35,7 +35,7 @@ export class GameLoop {
         // inizializziamo fps
         this.fps = 0; 
 
-        console.log('GameLoop initialized with target FPS:', this.fps);
+        console.log('GameLoop initialized with target FPS:', this.targetFps);
 
         this.mainLoop()
     }
@@ -54,8 +54,9 @@ export class GameLoop {
 
         // tframe è il timestamp del frame corrente (timestamp frame)
         let now = tframe;
-        //    
-        this.scope.tick = now; // <--- salviamo globalmente il tick dentro il Game
+        
+        
+        this.scope.tick = now; // salviamo globalmente il tick dentro il Game
 
         // il tempo trascorso dall'ultimo frame
         let elapsed = now - this.before;

@@ -7,6 +7,10 @@ export class Enemy extends DynamicEntity {
         super(scope, position, moveSpeed, width, height);
     }
 
+    render() {
+        super.render("#00FFCC"); // Colore rosso per l'enemy
+    }
+
     update(tick) {}
 
 

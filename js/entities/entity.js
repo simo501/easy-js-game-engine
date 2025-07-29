@@ -1,3 +1,5 @@
+import { DynamicEntity } from "./dynamic.entity.js";
+
 export class Entity {
     constructor(
         scope,
@@ -9,16 +11,14 @@ export class Entity {
         damage = 10,
     ) {
         this.scope = scope;
-        // per rendere il codice piu leggibile 
-        // passiamo anche un parametro state nella classe 
-        this.state = scope.state;
+        this.state = scope.state; // Stato del gioco
         this.position = position;
         this.moveSpeed = moveSpeed;
         this.width = width;
         this.height = height;
-
-        this.direction = direction; // direzione in cui si muove l'entità
-        this.damage = damage; // danno che infligge l'entità
+        this.direction = direction; // Direzione dell'entità
+        this.damage = damage; // Danno inflitto dall'entità
+        this.createdAt = performance.now(); // momento in cui il proiettile è stato creato
     }
 
     render(color = '#ff44ff') {
@@ -29,59 +29,41 @@ export class Entity {
             this.width,
             this.height
         );
-    };
+    }
 
-    update(tick) { }
+    update(tick) {
+        // Metodo vuoto, da sovrascrivere nelle sottoclassi
+    }
 
-    checkCollision(nextX, nextY, isHarmful = true) {
-        // qui dovremmo implementare la logica per controllare le collisioni
-        // con altri oggetti o entità nel gioco
-        // ad esempio, se il giocatore tocca un muro o un altro oggetto
-        // possiamo usare le coordinate di this.position e le dimensioni
-        // this.width e this.height per verificare le collisioni
-        // con altri oggetti nel gioco
-
-        // proprietà che una collisione può avere
-        // collision: se è avvenuta una collisione
-        // isBorder: se l'oggetto con cui è avvenuta la collisione è un bordo
+    checkCollision(nextX, nextY) {
         let collision = false;
         let isBorder = false;
-
-        console.log(nextX, nextY, 'new x and y position');
-
-        // controlliamo i limiti del canvas
-        if (nextX < 0 || nextX + this.width > this.scope.constants.width ||
-            nextY < 0 || nextY + this.height > this.scope.constants.height) {
-            // se nextX o nextY sono fuori dai limiti del canvas
-            // allora abbiamo una collisione con il bordo del canvas
-            collision = true;
-            isBorder = true;
-            console.log('Collision with border');
-        }
-
-        // controlliamo le collisioni con gli altri oggetti
-        const entities = this.state.entities;
-        // ci serve per tenere traccia dell'entità con cui è avvenuta la collisione
         let entityCollided;
 
+        // console.log(nextX, nextY, 'new x and y position');
+
+        // Controllo dei limiti del canvas
+        if (nextX < 0 || nextX + this.width > this.scope.constants.width ||
+            nextY < 0 || nextY + this.height > this.scope.constants.height) {
+            collision = true;
+            isBorder = true;
+        }
+
+        // Controllo delle collisioni con altre entità
+        const entities = this.state.entities;
         for (const entity of entities.keys()) {
             if (this !== entity &&
                 nextX < entity.position.x + entity.width &&
                 nextX + this.width > entity.position.x &&
                 nextY < entity.position.y + entity.height &&
                 nextY + this.height > entity.position.y) {
-                // Collisione rilevata
-                console.log(nextX, nextY, this, 'has detected a collision detected with', entity);
 
                 collision = true;
                 entityCollided = entity;
-
-                // prendiamo il danno nel caso in cui abbiamo avuto una collisione con un entità
-                if (isHarmful && entityCollided && entityCollided.damage > 0) {
-                    this.takeDamage(entityCollided.damage);
-                }
+                // console.log(nextX, nextY, this, 'has detected a collision detected with');
             }
         }
+
         if (!collision) this.changePosition(nextX, nextY);
 
         return { collision, isBorder, entityCollided };
