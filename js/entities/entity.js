@@ -16,7 +16,7 @@ export class Entity {
         this.moveSpeed = moveSpeed;
         this.width = width;
         this.height = height;
-        
+
         this.direction = direction; // direzione in cui si muove l'entità
         this.damage = damage; // danno che infligge l'entità
     }
@@ -33,7 +33,7 @@ export class Entity {
 
     update(tick) { }
 
-    checkCollision(nextX, nextY) {
+    checkCollision(nextX, nextY, isHarmful = true) {
         // qui dovremmo implementare la logica per controllare le collisioni
         // con altri oggetti o entità nel gioco
         // ad esempio, se il giocatore tocca un muro o un altro oggetto
@@ -43,11 +43,11 @@ export class Entity {
 
         // proprietà che una collisione può avere
         // collision: se è avvenuta una collisione
-        // isDeadly: se l'oggetto con cui è avvenuta la collisione è letale
         // isBorder: se l'oggetto con cui è avvenuta la collisione è un bordo
-        // isSolid: se l'oggetto con cui è avvenuta la collisione è solido
         let collision = false;
         let isBorder = false;
+
+        console.log(nextX, nextY, 'new x and y position');
 
         // controlliamo i limiti del canvas
         if (nextX < 0 || nextX + this.width > this.scope.constants.width ||
@@ -75,13 +75,19 @@ export class Entity {
 
                 collision = true;
                 entityCollided = entity;
+
+                // prendiamo il danno nel caso in cui abbiamo avuto una collisione con un entità
+                if (isHarmful && entityCollided && entityCollided.damage > 0) {
+                    this.takeDamage(entityCollided.damage);
+                }
             }
         }
         if (!collision) this.changePosition(nextX, nextY);
+
         return { collision, isBorder, entityCollided };
     }
 
-    changePosition(nextX, nextY) {  
+    changePosition(nextX, nextY) {
         this.position.x = nextX;
         this.position.y = nextY;
     }
