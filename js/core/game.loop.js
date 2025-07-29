@@ -54,6 +54,9 @@ export class GameLoop {
 
         // tframe è il timestamp del frame corrente (timestamp frame)
         let now = tframe;
+        //    
+        this.scope.tick = now; // <--- salviamo globalmente il tick dentro il Game
+
         // il tempo trascorso dall'ultimo frame
         let elapsed = now - this.before;
 

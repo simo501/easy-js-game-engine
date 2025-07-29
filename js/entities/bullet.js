@@ -23,8 +23,34 @@ export class Bullet extends Entity {
     }
 
     render() {
-        super.render("#ffffff");
+        const context = this.scope.context;
+        const tick = this.scope.tick;
+        const timePassed = tick - this.createdAt;
+        const fadeStart = this.timeToLive * 0.3; // 30% vita piena, 70% dissolvenza
+        const fadeDuration = this.timeToLive - fadeStart;
+
+        let fadeProgress = 0;
+
+        if (timePassed > fadeStart) {
+            fadeProgress = Math.min(1, (timePassed - fadeStart) / fadeDuration);
+        }
+
+        const alpha = 1 - fadeProgress;
+        const scale = 1 - fadeProgress * 0.5; // solo fino a metà dimensione
+
+        const scaledWidth = this.width * scale;
+        const scaledHeight = this.height * scale;
+
+        context.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        context.fillRect(
+            this.position.x + (this.width - scaledWidth) / 2,
+            this.position.y + (this.height - scaledHeight) / 2,
+            scaledWidth,
+            scaledHeight
+        );
     }
+
+
 
     update(tick) {
         let nextX = this.position.x;

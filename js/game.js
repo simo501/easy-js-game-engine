@@ -27,16 +27,20 @@ export default class Game {
         this.state.entities = new Map();
 
 
+
+
         // generateCanvas ritorna sia a canvas che context
         const { canvas, context } = canvasUtils.generateCanvas(width, height);
 
         this.viewport = canvas;
         this.context = context;
         this.viewport.id = 'gameViewport';
+        this.tick = 0; // inizializziamo il tick a 0
 
+        
         // inseriamo il canvas nel container prima di qualsiasi altro elemento
         $container.insertBefore(this.viewport, $container.firstChild);
-
+    
 
         // inizializziamo il giocatore
         this.createEnemy()
