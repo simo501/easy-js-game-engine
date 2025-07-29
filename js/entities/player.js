@@ -27,6 +27,7 @@ export class Player extends DynamicEntity {
         let nextX = this.position.x;
         let nextY = this.position.y;
 
+
         if (keysDown.isPressed.left) {
             this.direction = Directions.LEFT;
             nextX -= this.moveSpeed;
@@ -49,7 +50,9 @@ export class Player extends DynamicEntity {
 
         if (!keysDown.isPressed.isAny) return
 
-        const { collision, isBorder, entityCollided } = this.checkCollision(nextX, nextY);
+        let  collision, isBorder, entityCollided ;
+
+        collision, isBorder, entityCollided = this.checkCollision(nextX, nextY);
 
         if (entityCollided && entityCollided.damage > 0) {
             this.health.currentHealth -= entityCollided.damage;
