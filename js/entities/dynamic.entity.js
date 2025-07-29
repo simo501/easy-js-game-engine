@@ -41,7 +41,12 @@ export class DynamicEntity extends Entity {
         bulletDamage = this.damage,
         tick
     ) {
+        // contorlliamo il reload time
         if (this.shootProperties.lastShootTime + this.shootProperties.reloadTime > tick) return;
+
+        if (bulletSpeed < this.moveSpeed) {
+            bulletSpeed += this.moveSpeed;
+        }
 
         // implementazione del metodo di sparo, che può essere usato da Player e Enemy
         let bulletX = 0, bulletY = 0;

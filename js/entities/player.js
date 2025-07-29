@@ -6,7 +6,7 @@ export class Player extends DynamicEntity {
     constructor(
         scope,
         position = { x: 0, y: 0 },
-        moveSpeed = 20,
+        moveSpeed = 5,
         width = 24,
         height = 24,
         direction = Directions.EAST,
