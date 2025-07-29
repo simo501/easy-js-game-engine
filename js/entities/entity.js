@@ -77,6 +77,7 @@ export class Entity {
                 entityCollided = entity;
             }
         }
+        if (!collision) this.changePosition(nextX, nextY);
         return { collision, isBorder, entityCollided };
     }
 

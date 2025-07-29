@@ -23,7 +23,6 @@ export class Player extends DynamicEntity {
     };
 
     update(tick) {
-        console.log(`Player update tick: ${tick}`);
         // per ora collision prevenirà solo il movimento
         let nextX = this.position.x;
         let nextY = this.position.y;
@@ -57,10 +56,6 @@ export class Player extends DynamicEntity {
         }
 
         if (collision) return;
-
-        // se non c'è collisione, aggiorniamo la posizione del player
-        this.position.x = nextX;
-        this.position.y = nextY;
 
         // console.log(`Player position x:${this.position.x} + ${this.width}, y: ${this.position.y} + ${this.height}, direction: ${this.direction}`);
 
