@@ -6,7 +6,7 @@ export class Player extends DynamicEntity {
     constructor(
         scope,
         position = { x: 0, y: 0 },
-        moveSpeed = 5,
+        moveSpeed = 10,
         width = 24,
         height = 24,
         direction = Directions.EAST,
@@ -28,37 +28,49 @@ export class Player extends DynamicEntity {
         let nextY = this.position.y;
 
 
+        let addX = 0, addY = 0;
+
         if (keysDown.isPressed.left) {
             this.direction = Directions.LEFT;
             nextX -= this.moveSpeed;
+            addX -= 1
         }
 
         if (keysDown.isPressed.right) {
             this.direction = Directions.RIGHT;
             nextX += this.moveSpeed
+            addX += 1
         }
 
         if (keysDown.isPressed.up) {
             this.direction = Directions.UP;
             nextY -= this.moveSpeed
+            addY -= 1
         }
 
         if (keysDown.isPressed.down) {
             this.direction = Directions.DOWN;
             nextY += this.moveSpeed
+            addY += 1
         }
 
         if (!keysDown.isPressed.isAny) return
 
-        let  collision, isBorder, entityCollided ;
+        let collision, isBorder, entityCollided;
 
-        collision, isBorder, entityCollided = this.checkCollision(nextX, nextY);
+        let x = this.position.x
+        let y = this.position.y;
+        
+        console.log(x, y, nextX, nextY, 'player update');
 
-        if (entityCollided && entityCollided.damage > 0) {
-            this.health.currentHealth -= entityCollided.damage;
+        while (x != nextX || y != nextY) {
+            if (x != nextX) x += addX;
+            if (y != nextY) y += addY;
+            // è il metodo check collision che cambia posizione
+            collision, isBorder, entityCollided = this.checkCollision(x, y);
+            if (collision) break;
         }
 
-        if (collision) return;
 
         // console.log(`Player position x:${this.position.x} + ${this.width}, y: ${this.position.y} + ${this.height}, direction: ${this.direction}`);
 
