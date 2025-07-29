@@ -80,6 +80,11 @@ export class Entity {
         return { collision, isBorder, entityCollided };
     }
 
+    changePosition(nextX, nextY) {  
+        this.position.x = nextX;
+        this.position.y = nextY;
+    }
+
     die() {
         this.state.entities.delete(this);
     }
