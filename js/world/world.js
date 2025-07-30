@@ -1,10 +1,13 @@
+import { Camera } from '../core/game.camera.js'; 
+
 const minuteInTick = 1000;
 
 export class World {
-    constructor(scope, width = 800, height = 600, scene) {
+    constructor(scope, width = 800, height = 600, camera, scene) {
         this.scope = scope;
         this.width = width;
         this.height = height;
+        this.camera = camera; // La telecamera per la visualizzazione della scena
         this.scene = scene;
     }
 
@@ -12,16 +15,12 @@ export class World {
 
     render() {
         const ctx = this.scope.context;
-        ctx.clearRect(0, 0, this.width, this.height);
 
-        // Renderizza tutte le entità
-        for (const entity of this.entities) {
-            entity.render();
-        }
-
-        // Se la griglia è definita, disegnala
-        if (this.grid) {
-            drawGrid(ctx, this.grid);
+        const entities = this.scene.entities;
+        for (const entity of entities.keys()) {
+            if (this.camera.isOnCamera(entity)) {
+                entity.render(this.scope.tick);
+            }
         }
     }
 

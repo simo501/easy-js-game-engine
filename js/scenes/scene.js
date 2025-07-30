@@ -1,7 +1,8 @@
 export class Scene {
-    constructor(scope) {
+    constructor(scope, endless = false) {
         this.scope = scope;
         this.entities = new Map(); // Mappa per le entità della scena
+        this.endless = endless; // Indica se la scena è infinita o meno
     }
 
     addEntity(entity) {
@@ -19,11 +20,5 @@ export class Scene {
     }
 
     render() {
-        const ctx = this.scope.context;
-        ctx.clearRect(0, 0, this.world.width, this.world.height);
-        
-        for (const entity of this.entities) {
-            entity.render();
-        }
     }
 }
