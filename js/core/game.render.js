@@ -1,37 +1,41 @@
+import { drawGrid } from "../utils/utils.pathfinding.js";
+
 export class GameRender {
     constructor(scope) {
         this.scope = scope;
         this.width = scope.constants.width;
         this.height = scope.constants.height;
         this.state = scope.state;
-        this.render(0)
+        this.render(0);
     }
 
     render(fps) {
-        // destructuriamo le proprietà necessarie
         const { scope, width, height } = this;
 
-        // puliamo il canvas
+        // 1. Pulizia del canvas
         this.clearCanvas(scope.context, width, height);
 
-        // disegniamo un rettangolo rosso
+        // 2. Sfondo
         scope.context.fillStyle = 'gray';
         scope.context.fillRect(0, 0, width, height);
 
-        // disegniamo un testo
+        // 3. Debug: disegna griglia se disponibile (si rimuove dopo )
+        if (scope.grid) {
+            drawGrid(scope.context, scope.grid); 
+        }
+
+        // 4. Testo FPS
         scope.context.fillStyle = 'white';
         scope.context.font = '16px Arial';
-
         if (scope.constants.showFps) {
-            // se showFps è true, disegniamo il frame rate
             scope.context.fillText(`FPS: ${fps}`, width - 100, 30);
         }
 
-
+        // 5. Rendering entità
         if (this.state.hasOwnProperty('entities')) {
-            const entities = this.state.entities
+            const entities = this.state.entities;
             for (const entity of entities.keys()) {
-                entity.render(fps) 
+                entity.render(fps);
             }
         }
     }

@@ -1,16 +1,21 @@
+import { generateGrid } from "../utils/utils.pathfinding.js";
+
 export class GameUpdate {
     constructor(scope) {
         // Salva lo stato come proprietà della classe
         this.state = scope.state;
-        this.update()
+        this.scope = scope;
     }
 
 
     update(tick) {
-        // Aggiorna tutte le entità se presenti
+        // 1. Rigenera la griglia a ogni frame
+        this.scope.grid = generateGrid(this.scope);
+
+        // 2. Aggiorna tutte le entità presenti 
         const entities = this.state.entities;
         for (const entity of entities.keys()) {
-            entity.update(tick); // Itera su ogni entità
+            entity.update(tick);
         }
     }
 }

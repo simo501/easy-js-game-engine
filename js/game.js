@@ -36,7 +36,7 @@ export default class Game {
         this.context = context;
         this.viewport.id = 'gameViewport';
         this.tick = 0; // inizializziamo il tick a 0
-
+        this.grid = null; // inizializziamo la griglia a null
         
         // inseriamo il canvas nel container prima di qualsiasi altro elemento
         $container.insertBefore(this.viewport, $container.firstChild);

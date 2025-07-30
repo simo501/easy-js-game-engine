@@ -7,8 +7,8 @@ export class Player extends DynamicEntity {
         scope,
         position = { x: 0, y: 0 },
         moveSpeed = 10,
-        width = 24,
-        height = 24,
+        width = 20,
+        height = 20,
         direction = Directions.EAST,
         health = 100,
         damage = 10
