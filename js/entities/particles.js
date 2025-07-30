@@ -1,8 +1,8 @@
 import { Entity } from "./entity.js";
 
 export class Particle extends Entity {
-    constructor(scope, position, velocity, life = 100) {
-        super(scope, position, 0, 2, 2); // width/height 2px, no movement speed
+    constructor(scope, scene, position, velocity, life = 100) {
+        super(scope, scene, position, 0, 2, 2); // width/height 2px, no movement speed
 
         this.velocity = velocity; // { x: ..., y: ... }
         this.life = life;
@@ -14,8 +14,9 @@ export class Particle extends Entity {
             return;
         }
 
-        this.position.x += this.velocity.x;
-        this.position.y += this.velocity.y;
+        let nextX = this.position.x + this.velocity.x;
+        let nextY = this.position.y + this.velocity.y;
+        this.changePosition(nextX, nextY);
     }
 
     render() {

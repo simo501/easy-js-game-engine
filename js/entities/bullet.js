@@ -8,6 +8,7 @@ import { DynamicEntity } from "./dynamic.entity.js";
 export class Bullet extends Entity {
     constructor(
         scope,
+        scene,
         position = { x: 100, y: 0 },
         moveSpeed = 5,
         width = 10,
@@ -17,7 +18,7 @@ export class Bullet extends Entity {
         damage = 10,
         entityOrigin
     ) {
-        super(scope, position, moveSpeed, width, height, direction, health, damage);
+        super(scope, scene, position, moveSpeed, width, height, direction, health, damage);
         this.entityOrigin = this.entityOrigin
         this.timeToLive = 3000; // tempo di vita del proiettile in millisecondi
     }
@@ -97,59 +98,23 @@ export class Bullet extends Entity {
             // è il metodo check collision che cambia posizione
             const { collision, isBorder, entityCollided } = this.checkCollision(x, y);
             // controlliamo quale entità ha colliso con il proiettile
-            if (collision && entityCollided instanceof DynamicEntity) break;
+            if (collision) {
+                if (isBorder || (entityCollided && entityCollided instanceof Block)) {
+                    this.invertDirection();
+                } else if (entityCollided instanceof DynamicEntity) {
+                    entityCollided.takeDamage(this.damage)
+                    this.die()
+                } else if (entityCollided instanceof Bullet) {
+                    this.changePosition(nextX, nextY);
+                }
+            } else {
+                this.changePosition(x, y);
+            }
         }
-
-        // Verifica collisioni
-        // const { collision, isBorder, entityCollided } = this.checkCollision(nextX, nextY);
-
-        // const info = this.state.entities.get(entityCollided);
-
-        // Collisione con nemico
-        // if (collision && info?.type === 'enemy') {
-        //     entityCollided.takeDamage(this.damage);
-        //     this.die();
-        //     return;
-        // }
-
-        // Se tutto ok, aggiorna la posizione
-        // this.position.x = nextX;
-        // this.position.y = nextY;
     }
 
     checkCollision(nextX, nextY) {
-        const { collision, isBorder, entityCollided } = super.checkCollision(nextX, nextY);
-
-
-        if (collision) {
-            if (isBorder || (entityCollided && entityCollided instanceof Block)) {
-                console.log('Collision with border or block');
-                if (this.direction === Directions.EAST) {
-                    this.direction = Directions.WEST;
-                    // nextX -= this.moveSpeed
-                } else if (this.direction === Directions.WEST) {
-                    this.direction = Directions.EAST;
-                    // nextX += this.moveSpeed
-                }
-                else if (this.direction === Directions.NORTH) {
-                    this.direction = Directions.SOUTH;
-                    // nextY += this.moveSpeed
-                }
-                else if (this.direction === Directions.SOUTH) {
-                    this.direction = Directions.NORTH;
-                    // nextX -= this.moveSpeed
-                }
-                return { collision, isBorder, entityCollided };
-            } else if (entityCollided instanceof DynamicEntity) {
-                console.log(entityCollided.health)
-                entityCollided.takeDamage(this.damage)
-            } else if (entityCollided instanceof Bullet) {
-                this.changePosition(nextX, nextY);
-                return { collision, isBorder, entityCollided };
-            }
-            this.die();
-        }
-        return { collision, isBorder, entityCollided };
+        return super.checkCollision(nextX, nextY);
     }
 
 
@@ -167,6 +132,7 @@ export class Bullet extends Entity {
 
             const particle = new Particle(
                 this.scope,
+                this.scene,
                 {
                     x: this.position.x + this.width / 2,
                     y: this.position.y + this.height / 2,
@@ -175,11 +141,9 @@ export class Bullet extends Entity {
                 300 // durata in ms
             );
 
-            this.state.entities.set(particle, { type: 'particle' });
+            this.scene.addEntity(particle);
         }
     }
-
-
 
     removeBullet() {
         this.spawnParticles();

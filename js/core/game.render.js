@@ -1,11 +1,12 @@
 import { drawGrid } from "../utils/utils.grid.js";
 
 export class GameRender {
-    constructor(scope) {
+    constructor(scope, world) {
         this.scope = scope;
         this.width = scope.constants.width;
         this.height = scope.constants.height;
         this.state = scope.state;
+        this.world = world;
         this.render(0);
     }
 
@@ -32,12 +33,14 @@ export class GameRender {
         }
 
         // 5. Rendering entità
-        if (this.state.hasOwnProperty('entities')) {
-            const entities = this.state.entities;
-            for (const entity of entities.keys()) {
-                entity.render(this.scope.tick);
-            }
-        }
+        // if (this.state.hasOwnProperty('entities')) {
+        //     const entities = this.state.entities;
+        //     for (const entity of entities.keys()) {
+        //         entity.render(this.scope.tick);
+        //     }
+        // }
+        // tick lo passiamo con lo scope
+        this.world.render(this.scope.tick);
     }
 
     clearCanvas(context, width, height) {

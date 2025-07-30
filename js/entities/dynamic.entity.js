@@ -5,6 +5,7 @@ import { Bullet } from "./bullet.js";
 export class DynamicEntity extends Entity {
     constructor(
         scope,
+        scene,
         position = { x: 0, y: 0 },
         moveSpeed = 3,
         width = 23,
@@ -14,7 +15,7 @@ export class DynamicEntity extends Entity {
         damage = 10,
         maxShoots = 10
     ) {
-        super(scope, position, moveSpeed, width, height, direction, damage);
+        super(scope, scene, position, moveSpeed, width, height, direction, damage);
 
         // salute attuale dell'entità
         this.health = {
@@ -80,6 +81,7 @@ export class DynamicEntity extends Entity {
 
         const bullet = new Bullet(
             this.scope,
+            this.scene,
             bulletPosition,
             bulletSpeed,
             bulletWidth,
@@ -90,7 +92,9 @@ export class DynamicEntity extends Entity {
             this // campo entityOrigin per tenere traccia dell'entità che ha sparato il proiettile
         );
 
-        this.state.entities.set(bullet, { type: 'bullet' });
+        console.log(`Sparo in direzione ${this.direction} da posizione x:${bulletPosition.x}, y: ${bulletPosition.y}`);
+
+        this.scene.addEntity(bullet);
     }
 
     takeDamage(amount) {

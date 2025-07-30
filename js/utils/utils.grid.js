@@ -2,12 +2,12 @@
 const tileSize = 20;
 
 // === GRIGLIA ===
-export function generateGrid(game) {
+export function generateGrid(game, entities) {
   const cols = Math.floor(game.constants.width / tileSize);
   const rows = Math.floor(game.constants.height / tileSize);
   const grid = Array.from({ length: rows }, () => Array(cols).fill(0));
 
-  for (const [entity, info] of game.state.entities) {
+  for (const [entity, info] of entities) {
     if (info.type === "block") {
       const startCol = Math.floor(entity.position.x / tileSize);
       const startRow = Math.floor(entity.position.y / tileSize);

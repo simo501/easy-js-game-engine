@@ -1,8 +1,10 @@
-import { DynamicEntity } from "./dynamic.entity.js";
+
+import { Directions } from "../utils/utils.directions.js";
 
 export class Entity {
     constructor(
         scope,
+        scene,
         position = { x: 0, y: 0 },
         moveSpeed = 3,
         width = 23,
@@ -19,15 +21,16 @@ export class Entity {
         this.direction = direction; // Direzione dell'entità
         this.damage = damage; // Danno inflitto dall'entità
         this.createdAt = performance.now(); // momento in cui il proiettile è stato creato
-        
+
+        this.scene = scene
         // salviamo il valore tick dallo scope
     }
 
     render(color = '#ff44ff') {
         this.scope.context.fillStyle = color;
         this.scope.context.fillRect(
-            this.position.x,
-            this.position.y,
+            this.position.x % this.scope.constants.width,
+            this.position.y % this.scope.constants.height,
             this.width,
             this.height
         );
@@ -45,14 +48,25 @@ export class Entity {
         // console.log(nextX, nextY, 'new x and y position');
 
         // Controllo dei limiti del canvas
-        if (nextX < 0 || nextX + this.width > this.scope.constants.width ||
-            nextY < 0 || nextY + this.height > this.scope.constants.height) {
+        // if (nextX < 0 || nextX + this.width > this.scope.constants.width ||
+        //     nextY < 0 || nextY + this.height > this.scope.constants.height) {
+        //     collision = true;
+        //     isBorder = true;
+        // }
+        // per ora controlliamo solo se l'entità è visibile nella camera
+        // se non è visibile allora abbiamo una collisione con il bordo del canvas
+        if (!this.scope.world.camera.isOnCamera(null, {x:nextX, y:nextY}).onCamera) {
             collision = true;
             isBorder = true;
         }
 
+        if (nextX < 0 || nextY < 0) {
+            collision = true;
+            isBorder = false;
+        }
+
         // Controllo delle collisioni con altre entità
-        const entities = this.state.entities;
+        const entities = this.scope.world.scene.entities;
         for (const entity of entities.keys()) {
             if (this !== entity &&
                 nextX < entity.position.x + entity.width &&
@@ -62,11 +76,11 @@ export class Entity {
 
                 collision = true;
                 entityCollided = entity;
-                // console.log(nextX, nextY, this, 'has detected a collision detected with');
+                // console.log(nextX, nextY, isBorder, collision, 'has detected a collision detected with');
             }
         }
 
-        if (!collision) this.changePosition(nextX, nextY);
+        // if (!collision) this.changePosition(nextX, nextY);
 
         return { collision, isBorder, entityCollided };
     }
@@ -76,7 +90,22 @@ export class Entity {
         this.position.y = nextY;
     }
 
+    invertDirection() {
+        if (this.direction === Directions.EAST) {
+            this.direction = Directions.WEST;
+        } else if (this.direction === Directions.WEST) {
+            this.direction = Directions.EAST;
+        }
+        else if (this.direction === Directions.NORTH) {
+            this.direction = Directions.SOUTH;
+        }
+        else if (this.direction === Directions.SOUTH) {
+            this.direction = Directions.NORTH;
+        }
+    }
+
+
     die() {
-        this.state.entities.delete(this);
+        this.scene.removeEntity(this);
     }
 }

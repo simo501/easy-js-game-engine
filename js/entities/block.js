@@ -1,8 +1,8 @@
 import { Entity } from "./entity.js";
 
 export class Block extends Entity {
-    constructor(scope, position = { x: 0, y: 0 }, width = 50, height = 50) {
-        super(scope, position, 0, width, height);
+    constructor(scope, scene, position = { x: 0, y: 0 }, width = 50, height = 50) {
+        super(scope, scene, position, 0, width, height);
     }
 
     render() {

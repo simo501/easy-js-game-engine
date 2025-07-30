@@ -2,12 +2,17 @@ import * as canvasUtils from './utils/utils.canvas.js';
 import { GameUpdate } from './core/game.update.js';
 import { GameRender } from './core/game.render.js';
 import { GameLoop } from './core/game.loop.js';
+import { Scene } from './scenes/scene.js';
 import { Player } from './entities/player.js';
 import { Enemy } from './entities/enemy.js';
-import { Bullet } from './entities/bullet.js';
 import { Block } from './entities/block.js';
+import { World } from './world/world.js';
+import { Camera } from './core/game.camera.js';
+
 
 let $container = document.getElementById('container');
+const default_width = 800;
+const default_height = 600;
 
 // Create base game class
 export default class Game {
@@ -18,14 +23,12 @@ export default class Game {
             width: width,
             height: height,
             targetFps: targetFps,
-            showFps: showFps
+            showFps: showFps,
+            spawnPoint: {
+                x: width * 10,
+                y: height * 10
+            }
         };
-
-        // state è un contenitore per gestire e accedere alle informazioni necessarie 
-        // durante il ciclo di vita del gioco.
-        this.state = {}
-        this.state.entities = new Map();
-
 
 
 
@@ -40,14 +43,24 @@ export default class Game {
         
         // inseriamo il canvas nel container prima di qualsiasi altro elemento
         $container.insertBefore(this.viewport, $container.firstChild);
-    
 
         // inizializziamo il giocatore
-        this.createEnemy()
-        this.createPlayer()
-        this.createBlock()
-        this.createBlock({ x: 300, y: 300 }, 100, 100);
+        
+        let scene = new Scene(this, true);
+        let camera = new Camera(this, width, height);
+        this.world = new World(this, camera, scene)
 
+        let player = new Player(this, scene, { x: width / 2, y: height / 2 }, 10, 20, 20);
+        scene.addPlayer(player);
+
+        let enemy1 = new Enemy(this, scene, { x: 100, y: 30 }, 0, 40, 20, player);
+        let block1 = new Block(this, scene, { x: 200, y: 60 }, 20, 20);
+        let block2 = new Block(this, scene, { x: 300, y: 100 }, 20, 20);
+
+        scene.addEntity(enemy1);
+        scene.addEntity(block1);
+        scene.addEntity(block2);
+        
 
         // assegnamo ad update un istanza di GameUpdate
         // e render un istanza di GameRender
@@ -56,36 +69,16 @@ export default class Game {
         // tramite this.update, this.render e this.loop
 
         // prima cosa che facciamo è aggiornare
-        this.update = new GameUpdate(this);
+        this.update = new GameUpdate(this, this.world);
         // poi renderizziamo
-        this.render = new GameRender(this);
+        this.render = new GameRender(this, this.world);
         // infine inizializziamo il ciclo di gioco
         // che si occuperà di gestire il ciclo di vita del gioco
         // e di chiamare i metodi update e render al momento giusto
-        this.loop = new GameLoop(this);
+        this.loop = new GameLoop(this, this.world);
     }
 
-    // metodo per creare un giocatore ed aggiungerlo allo stato del gioco
-    createPlayer() {
-        const player = new Player(this)
-        this.state.entities.set(player, { type: 'player' });
-    }
-
-    createEnemy() {
-        const enemy = new Enemy(this, { x: this.constants.width / 2, y: this.constants.height / 2 }, 5, 64, 64);
-        this.state.entities.set(enemy, { type: 'enemy' });
-   }
-
-//    createBullet(position = { x: 100, y: 0 }, moveSpeed = 5) {
-//        const bullet = new Bullet(this, position, moveSpeed);
-//        this.state.entities.set(bullet, { type: 'bullet' });
-//    }
-
-    createBlock(position = { x: 200, y: 200 }, width = 50, height = 50) {
-        const block = new Block(this, position, width, height);
-        this.state.entities.set(block, { type: 'block' });
-    }
 }
 
 // assegnando a window l'oggetto, rendiamo la variabile game come globale
-window.game = new Game(800, 600);
+window.game = new Game(default_width, default_height);

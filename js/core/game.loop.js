@@ -35,8 +35,6 @@ export class GameLoop {
         // inizializziamo fps
         this.fps = 0; 
 
-        console.log('GameLoop initialized with target FPS:', this.targetFps);
-
         this.mainLoop()
     }
 

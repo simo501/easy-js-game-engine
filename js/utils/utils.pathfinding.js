@@ -14,8 +14,9 @@ export function enemyUpdate(enemy, player, gridData) {
 
     const { collision } = enemy.checkCollision(nextX, nextY);
     if (!collision) {
-      enemy.position.x = nextX;
-      enemy.position.y = nextY;
+      // enemy.position.x = nextX;
+      // enemy.position.y = nextY;
+      enemy.changePosition(nextX, nextY);
     } else {
       // tenta movimenti singoli asse X o Y
       const testX = enemy.checkCollision(enemy.position.x + moveX, enemy.position.y);

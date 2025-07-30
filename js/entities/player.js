@@ -5,6 +5,7 @@ import { DynamicEntity } from "./dynamic.entity.js";
 export class Player extends DynamicEntity {
     constructor(
         scope,
+        scene,
         position = { x: 0, y: 0 },
         moveSpeed = 10,
         width = 20,
@@ -13,7 +14,7 @@ export class Player extends DynamicEntity {
         health = 100,
         damage = 10
     ) {
-        super(scope, position, moveSpeed, width, height, direction, health, damage);
+        super(scope, scene, position, moveSpeed, width, height, direction, health, damage);
     }
 
     render() {
@@ -23,7 +24,9 @@ export class Player extends DynamicEntity {
     }
 
     update(tick) {
+        // console.log(`Player position: x=${this.position.x}, y=${this.position.y}`);
         // Se non viene premuto nessun tasto, non facciamo nulla
+        console.log(`Player update at tick: ${this.position.x}, y=${this.position.y}`);
         if (!keysDown.isPressed.isAny) return;
 
         let nextX = this.position.x;
@@ -66,8 +69,12 @@ export class Player extends DynamicEntity {
             if (x != nextX) x += addX;
             if (y != nextY) y += addY;
 
-            collision, isBorder, entityCollided = this.checkCollision(x, y);
-            if (collision) break;
+            let { collision, isBorder, entityCollided } = this.checkCollision(x, y);
+            if (collision && isBorder) {
+                this.changePosition(x, y);
+            } else if (!collision) {
+                this.changePosition(x, y);
+            }
         }
 
         // Gestione dello sparo
@@ -75,9 +82,8 @@ export class Player extends DynamicEntity {
             this.shoot(5, 10, 10, 10, this.damage, tick);
         }
     }
-
     checkCollision(nextX, nextY) {
         // Verifica collisioni tramite il metodo della classe base
-        return super.checkCollision(nextX, nextY, true);
+        return super.checkCollision(nextX, nextY)
     }
 }
