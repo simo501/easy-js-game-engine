@@ -35,7 +35,7 @@ export class GameRender {
         if (this.state.hasOwnProperty('entities')) {
             const entities = this.state.entities;
             for (const entity of entities.keys()) {
-                entity.render(fps);
+                entity.render(this.scope.tick);
             }
         }
     }

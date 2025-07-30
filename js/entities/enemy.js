@@ -12,7 +12,7 @@ export class Enemy extends DynamicEntity {
         this.scope.context.fillText(`Enemy health: ${this.health.currentHealth}`, 10, 50);
     }
 
-    update(tick) {
+    update() {
         // Trova il giocatore tra le entità
         //...this.state.entities espande la Map in un array di coppie [entity, info]
         const player = [...this.state.entities].find(([e, info]) => info.type === 'player')?.[0];

@@ -19,6 +19,8 @@ export class Entity {
         this.direction = direction; // Direzione dell'entità
         this.damage = damage; // Danno inflitto dall'entità
         this.createdAt = performance.now(); // momento in cui il proiettile è stato creato
+        
+        // salviamo il valore tick dallo scope
     }
 
     render(color = '#ff44ff') {

@@ -22,9 +22,8 @@ export class Bullet extends Entity {
         this.timeToLive = 3000; // tempo di vita del proiettile in millisecondi
     }
 
-    render() {
+    render(tick) {
         const context = this.scope.context;
-        const tick = this.scope.tick;
         const timePassed = tick - this.createdAt;
         const fadeStart = this.timeToLive * 0.3; // 30% vita piena, 70% dissolvenza
         const fadeDuration = this.timeToLive - fadeStart;

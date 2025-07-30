@@ -8,14 +8,14 @@ export class GameUpdate {
     }
 
 
-    update(tick) {
+    update() {
         // 1. Rigenera la griglia a ogni frame
         this.scope.grid = generateGrid(this.scope);
 
         // 2. Aggiorna tutte le entità presenti 
         const entities = this.state.entities;
         for (const entity of entities.keys()) {
-            entity.update(tick);
+            entity.update(this.scope.tick);
         }
     }
 }

@@ -19,7 +19,7 @@ export class Particle extends Entity {
     }
 
     render() {
-        const tick = this.scope.tick;
+        const tick = this.tick;
         const timeRatio = 1 - ((tick - this.createdAt) / this.life);
         const ctx = this.scope.context;
 
