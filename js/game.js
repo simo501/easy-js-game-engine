@@ -53,7 +53,7 @@ export default class Game {
         let player = new Player(this, scene, { x: width / 2, y: height / 2 }, 10, 20, 20);
         scene.addPlayer(player);
 
-        let enemy1 = new Enemy(this, scene, { x: 100, y: 30 }, 0, 40, 20, player);
+        let enemy1 = new Enemy(this, scene, { x: 100, y: 30 }, 5, 40, 20, player);
         let block1 = new Block(this, scene, { x: 200, y: 60 }, 20, 20);
         let block2 = new Block(this, scene, { x: 300, y: 100 }, 20, 20);
 
