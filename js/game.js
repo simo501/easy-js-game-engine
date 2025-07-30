@@ -50,7 +50,7 @@ export default class Game {
         let camera = new Camera(this, width, height);
         this.world = new World(this, camera, scene)
 
-        let player = new Player(this, scene, { x: width / 2, y: height / 2 }, 10, 20, 20);
+        let player = new Player(this, scene, { x: width / 2, y: height / 2 }, 10, 20, 20, 10);
         scene.addPlayer(player);
 
         let enemy1 = new Enemy(this, scene, { x: 100, y: 30 }, 5, 40, 20, player);

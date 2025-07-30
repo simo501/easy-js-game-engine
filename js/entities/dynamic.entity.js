@@ -92,8 +92,6 @@ export class DynamicEntity extends Entity {
             this // campo entityOrigin per tenere traccia dell'entità che ha sparato il proiettile
         );
 
-        console.log(`Sparo in direzione ${this.direction} da posizione x:${bulletPosition.x}, y: ${bulletPosition.y}`);
-
         this.scene.addEntity(bullet);
     }
 

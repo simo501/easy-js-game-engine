@@ -43,6 +43,7 @@ export class Entity {
     checkCollision(nextX, nextY) {
         let collision = false;
         let isBorder = false;
+        let isInvalicable = false;
         let entityCollided;
 
         // console.log(nextX, nextY, 'new x and y position');
@@ -60,9 +61,11 @@ export class Entity {
             isBorder = true;
         }
 
+        // non si puo andare sui numeri negativi
         if (nextX < 0 || nextY < 0) {
             collision = true;
-            isBorder = false;
+            isBorder = true;
+            isInvalicable = true;
         }
 
         // Controllo delle collisioni con altre entità
@@ -76,13 +79,13 @@ export class Entity {
 
                 collision = true;
                 entityCollided = entity;
-                // console.log(nextX, nextY, isBorder, collision, 'has detected a collision detected with');
+                console.log(nextX, nextY, isBorder, collision, 'has detected a collision detected with');
             }
         }
 
         // if (!collision) this.changePosition(nextX, nextY);
 
-        return { collision, isBorder, entityCollided };
+        return { collision, isBorder, isInvalicable, entityCollided };
     }
 
     changePosition(nextX, nextY) {

@@ -9,7 +9,7 @@ export class Bullet extends Entity {
     constructor(
         scope,
         scene,
-        position = { x: 100, y: 0 },
+        position,
         moveSpeed = 5,
         width = 10,
         height = 10,
@@ -50,8 +50,8 @@ export class Bullet extends Entity {
         // );
         context.beginPath();
         context.arc(
-            this.position.x + this.width / 2,
-            this.position.y + this.height / 2,
+            this.position.x % this.scope.constants.width + this.width / 2,
+            this.position.y % this.scope.constants.height + this.height / 2,
             this.width / 2,
             0,
             Math.PI * 2
@@ -96,15 +96,16 @@ export class Bullet extends Entity {
             if (x != nextX) x += addX;
             if (y != nextY) y += addY;
             // è il metodo check collision che cambia posizione
-            const { collision, isBorder, entityCollided } = this.checkCollision(x, y);
+            const collisionRes = this.checkCollision(x, y);
             // controlliamo quale entità ha colliso con il proiettile
-            if (collision) {
-                if (isBorder || (entityCollided && entityCollided instanceof Block)) {
+            if (collisionRes.collision) {
+                if (collisionRes.isBorder || (collisionRes.entityCollided && collisionRes.entityCollided instanceof Block) ) {
                     this.invertDirection();
-                } else if (entityCollided instanceof DynamicEntity) {
-                    entityCollided.takeDamage(this.damage)
-                    this.die()
-                } else if (entityCollided instanceof Bullet) {
+                } else if (collisionRes.entityCollided instanceof DynamicEntity) {
+                    collisionRes.entityCollided.takeDamage(this.damage)
+                    this.removeBullet();
+                    break
+                } else if (collisionRes.entityCollided instanceof Bullet) {
                     this.changePosition(nextX, nextY);
                 }
             } else {

@@ -20,11 +20,11 @@ export function enemyUpdate(enemy, player, gridData) {
     } else {
       // tenta movimenti singoli asse X o Y
       const testX = enemy.checkCollision(enemy.position.x + moveX, enemy.position.y);
-      if (!testX.collision || testX.isBorder) {
+      if (!testX.collision || testX.isBorder && !testX.isInvalicable) {
         enemy.position.x += moveX;
       } else {
         const testY = enemy.checkCollision(enemy.position.x, enemy.position.y + moveY);
-        if (!testY.collision || testX.isBorder) {
+        if (!testY.collision || testX.isBorder && testX.isInvalicable) {
           enemy.position.y += moveY;
         }
       }

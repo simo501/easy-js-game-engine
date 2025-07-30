@@ -69,10 +69,11 @@ export class Player extends DynamicEntity {
             if (x != nextX) x += addX;
             if (y != nextY) y += addY;
 
-            let { collision, isBorder, entityCollided } = this.checkCollision(x, y);
-            if (collision && isBorder) {
+            const collisionRes = this.checkCollision(x, y);
+
+            if (collisionRes.collision && collisionRes.isBorder && !collisionRes.isInvalicable) {
                 this.changePosition(x, y);
-            } else if (!collision) {
+            } else if (!collisionRes.collision) {
                 this.changePosition(x, y);
             }
         }
