@@ -1,4 +1,4 @@
-import { drawGrid } from "../utils/utils.pathfinding.js";
+import { drawGrid } from "../utils/utils.grid.js";
 
 export class GameRender {
     constructor(scope) {

@@ -1,4 +1,4 @@
-import { generateGrid } from "../utils/utils.pathfinding.js";
+import { generateGrid } from "../utils/utils.grid.js";
 
 export class GameUpdate {
     constructor(scope) {
