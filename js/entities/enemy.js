@@ -2,12 +2,14 @@ import { DynamicEntity } from "./dynamic.entity.js";
 import { enemyUpdate } from "../utils/utils.pathfinding.js"; // Assicurati del percorso
 
 export class Enemy extends DynamicEntity {
-    constructor(scope, position = { x: 100, y: 30 }, moveSpeed = 1, width = 40, height = 20) {
+    constructor(scope, position = { x: 100, y: 30 }, moveSpeed = 5, width = 40, height = 20) {
         super(scope, position, moveSpeed, width, height);
     }
 
     render() {
         super.render("#00FFCC"); // Colore azzurro per l'enemy
+        this.scope.context.fillStyle = "#00FFCC";
+        this.scope.context.fillText(`Enemy health: ${this.health.currentHealth}`, 10, 50);
     }
 
     update(tick) {

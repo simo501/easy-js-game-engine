@@ -72,7 +72,7 @@ export default class Game {
     }
 
     createEnemy() {
-        const enemy = new Enemy(this, { x: this.constants.width / 2, y: this.constants.height / 2 }, 1, 64, 64);
+        const enemy = new Enemy(this, { x: this.constants.width / 2, y: this.constants.height / 2 }, 5, 64, 64);
         this.state.entities.set(enemy, { type: 'enemy' });
    }
 

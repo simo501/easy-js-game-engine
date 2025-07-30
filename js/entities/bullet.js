@@ -97,6 +97,7 @@ export class Bullet extends Entity {
             if (y != nextY) y += addY;
             // è il metodo check collision che cambia posizione
             const { collision, isBorder, entityCollided } = this.checkCollision(x, y);
+            // controlliamo quale entità ha colliso con il proiettile
             if (collision && entityCollided instanceof DynamicEntity) break;
         }
 
