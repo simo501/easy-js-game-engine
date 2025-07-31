@@ -1,3 +1,7 @@
+import { keysDown } from "../utils/utils.keysDown.js";
+
+
+
 export class GameLoop {
     // per rendere codice leggibile e riutilizzabile
     constructor(scope) {
@@ -49,6 +53,9 @@ export class GameLoop {
         // in modo tale da poter accedere anche nel nuovo frame a this.scope e agli altri metodi della classe
         // mantenendo il giusto contesto di esecuzione
         let stopLoop = window.requestAnimationFrame(this.mainLoop.bind(this));
+
+        if (!keysDown.isPressed.running) return;
+
 
         // tframe è il timestamp del frame corrente (timestamp frame)
         let now = tframe;
