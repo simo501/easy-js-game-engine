@@ -1,24 +1,29 @@
 export const keysDown = (() => {
     let left = false, right = false, up = false, down = false, space = false;
+    let running = true; // stato di esecuzione del gioco (true = attivo, false = in pausa)
 
-    // Set up `onkeydown` event handler.
     document.onkeydown = function (ev) {
-        if (ev.key === 'ArrowRight') { right = true; }
-        if (ev.key === 'ArrowLeft') { left = true; }
-        if (ev.key === 'ArrowUp') { up = true; }
-        if (ev.key === 'ArrowDown') { down = true; }
-        if (ev.key === ' ') { space = true; } // Space key
+        if (ev.key === 'ArrowRight') right = true;
+        if (ev.key === 'ArrowLeft') left = true;
+        if (ev.key === 'ArrowUp') up = true;
+        if (ev.key === 'ArrowDown') down = true;
+        if (ev.key === ' ') space = true;
+
+        if (ev.key === 'p' || ev.key === 'P') {
+            running = !running; // Inverti stato pausa
+            console.log(`Pausa: ${!running}`); // Debug
+        }
     };
 
-    // Set up `onkeyup` event handler.
     document.onkeyup = function (ev) {
-        if (ev.key === 'ArrowRight') { right = false; }
-        if (ev.key === 'ArrowLeft') { left = false; }
-        if (ev.key === 'ArrowUp') { up = false; }
-        if (ev.key === 'ArrowDown') { down = false; }
-        if (ev.key === ' ') { space = false; } // Space key
+        if (ev.key === 'ArrowRight') right = false;
+        if (ev.key === 'ArrowLeft') left = false;
+        if (ev.key === 'ArrowUp') up = false;
+        if (ev.key === 'ArrowDown') down = false;
+        if (ev.key === ' ') space = false;
     };
 
+    // Touch (opzionale)
     document.getElementById('btn-left').onmousedown = () => { left = true; };
     document.getElementById('btn-left').onmouseup = () => { left = false; };
     document.getElementById('btn-left').ontouchstart = () => { left = true; };
@@ -44,17 +49,16 @@ export const keysDown = (() => {
     document.getElementById('btn-space').ontouchstart = () => { space = true; };
     document.getElementById('btn-space').ontouchend = () => { space = false; };
 
-
     return {
         isPressed: {
             get left() { return left; },
             get right() { return right; },
             get up() { return up; },
             get down() { return down; },
-            get space() { return space; }, // Space key
-            get isAny() { // per controllare se almeno un tasto è premuto
-                return left || right || up || down || space;
-            }
+            get space() { return space; },
+            get isAny() { return left || right || up || down || space; },
+            get running() { return running; }
         }
     };
 })();
+
