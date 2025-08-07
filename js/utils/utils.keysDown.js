@@ -21,18 +21,28 @@ export const keysDown = (() => {
 
     document.getElementById('btn-left').onmousedown = () => { left = true; };
     document.getElementById('btn-left').onmouseup = () => { left = false; };
+    document.getElementById('btn-left').ontouchstart = () => { left = true; };
+    document.getElementById('btn-left').ontouchend = () => { left = false; };
 
     document.getElementById('btn-right').onmousedown = () => { right = true; };
     document.getElementById('btn-right').onmouseup = () => { right = false; };
+    document.getElementById('btn-right').ontouchstart = () => { right = true; };
+    document.getElementById('btn-right').ontouchend = () => { right = false; };
 
     document.getElementById('btn-up').onmousedown = () => { up = true; };
     document.getElementById('btn-up').onmouseup = () => { up = false; };
+    document.getElementById('btn-up').ontouchstart = () => { up = true; };
+    document.getElementById('btn-up').ontouchend = () => { up = false; };
 
     document.getElementById('btn-down').onmousedown = () => { down = true; };
     document.getElementById('btn-down').onmouseup = () => { down = false; };
+    document.getElementById('btn-down').ontouchstart = () => { down = true; };
+    document.getElementById('btn-down').ontouchend = () => { down = false; };
 
     document.getElementById('btn-space').onmousedown = () => { space = true; };
     document.getElementById('btn-space').onmouseup = () => { space = false; };
+    document.getElementById('btn-space').ontouchstart = () => { space = true; };
+    document.getElementById('btn-space').ontouchend = () => { space = false; };
 
 
     return {

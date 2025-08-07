@@ -10,9 +10,12 @@ import { World } from './world/world.js';
 import { Camera } from './core/game.camera.js';
 
 
+const maxWidth = window.innerWidth;
+const maxHeight = window.innerHeight;
+
 let $container = document.getElementById('container');
-const default_width = 800;
-const default_height = 600;
+const default_width = maxWidth;
+const default_height = maxHeight - 100;
 
 // Create base game class
 export default class Game {
