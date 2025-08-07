@@ -3,15 +3,18 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- qui disabilitiamo anche il pinch to zoom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Simple JS Game Engine</title>
 </head>
 
 <style>
+    
     button {
-        height: 40px;
-        width: 80px;
+        height: 60px;
+        width: 70px;
         font-size: large;
+        border-radius: 0;
     }
 </style>
 
@@ -22,11 +25,11 @@
         style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
 
         <div style="display: flex; flex-direction: row;">
-            <button id="btn-left">Left</button>
-            <button id="btn-right">Right</button>
-            <button style="margin-left: 10%;" id="btn-up">Up</button>
-            <button id="btn-down">Down</button>
-            <button id="btn-space">SHOOT</button>
+            <button style="margin-left: 5%;" id="btn-left">L</button>
+            <button style="margin-left: 5%;" id="btn-right">R</button>
+            <button style="margin-left: 10%;" id="btn-up">U</button>
+            <button style="margin-left: 5%;" id="btn-down">D</button>
+            <button style="margin-left: 10%;" id="btn-space">S</button>
 
         </div>
     </div>
