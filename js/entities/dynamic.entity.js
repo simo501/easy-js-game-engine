@@ -1,4 +1,4 @@
-import { Entity } from "./entity.js";
+import { Entity } from "./base.entity.js";
 import { Directions } from "../utils/utils.directions.js";
 import { Bullet } from "./bullet.js";
 

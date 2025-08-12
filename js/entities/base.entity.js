@@ -2,28 +2,22 @@
 import { Directions } from "../utils/utils.directions.js";
 
 export class Entity {
+    // scope lo prendiamo da scene
     constructor(
-        scope,
         scene,
-        position = { x: 0, y: 0 },
-        moveSpeed = 3,
-        width = 23,
-        height = 16,
-        direction = "down",
-        damage = 10,
+        position = { x: 0, y: 0},
+        dimensions = { width: 23, height: 16 },
+        movement = { speed: 0, direction: Directions.DOWN},
+        health = { current: 100, max: 100 },
     ) {
-        this.scope = scope;
-        this.state = scope.state; // Stato del gioco
-        this.position = position;
-        this.moveSpeed = moveSpeed;
-        this.width = width;
-        this.height = height;
-        this.direction = direction; // Direzione dell'entità
-        this.damage = damage; // Danno inflitto dall'entità
-        this.createdAt = performance.now(); // momento in cui il proiettile è stato creato
-
         this.scene = scene
-        // salviamo il valore tick dallo scope
+        // lo scope lo prendiamo dalla scena
+        this.scope = scene.scope;
+        this.position = position; 
+        this.dimensions = dimensions;
+        this.movement = movement; 
+        this.health = health;
+        this.infos = {createdAt: performance.now()} 
     }
 
     render(color = '#ff44ff') {

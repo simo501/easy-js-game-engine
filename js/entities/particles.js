@@ -1,4 +1,4 @@
-import { Entity } from "./entity.js";
+import { Entity } from "./base.entity.js";
 
 export class Particle extends Entity {
     constructor(scope, scene, position, velocity, life = 100) {
