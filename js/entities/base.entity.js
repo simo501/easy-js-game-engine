@@ -7,7 +7,7 @@ export class Entity {
         position = { x: 0, y: 0 },
         dimensions = { w: 23, h: 16 },
         movement = { speed: 0, dir: Directions.DOWN },
-        health = { immortal: false, curr: 100, max: 100, timeToLive: -1},
+        health = { immortal: false, curr: 100, max: 100, timeToLive: -1 },
         // {sprite: Image(), }
         //         ctx.drawImage(
         //     sprite,       // immagine
@@ -26,6 +26,11 @@ export class Entity {
         this.health = health;
         this.assets = assets;
         this.infos = { createdAt: performance.now() }
+
+        if (this.assets) {
+            this.img = new Image();
+            this.img.src = this.assets.basicSrc; // Imposta il percorso dell'immagine se assets è fornito
+        }
     }
 
     render(color = '#ff44ff') {
@@ -42,15 +47,13 @@ export class Entity {
             const img = new Image();
             img.src = this.assets.basicSrc
 
-            img.onload = () => {
-                this.scope.context.drawImage(
-                    img,
-                    this.position.x % this.scope.constants.width,
-                    this.position.y % this.scope.constants.height,
-                    this.dimensions.w,
-                    this.dimensions.h
-                );
-            }
+            this.scope.context.drawImage(
+                img,
+                this.position.x % this.scope.constants.width,
+                this.position.y % this.scope.constants.height,
+                this.dimensions.w,
+                this.dimensions.h
+            );
         }
     }
 

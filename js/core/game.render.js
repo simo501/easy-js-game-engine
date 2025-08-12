@@ -40,6 +40,7 @@ export class GameRender {
         //     }
         // }
         // tick lo passiamo con lo scope
+        console.log(`Rendering at tick: ${scope.tick}`);
         this.world.render(this.scope.tick);
     }
 
