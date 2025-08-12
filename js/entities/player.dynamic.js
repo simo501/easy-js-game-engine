@@ -24,17 +24,17 @@ export class Player extends DynamicEntity {
     }
 
     render() {
-        super.render("#40d870");
+        super.render("#FFd870");
 
         // Mostra la salute del giocatore
         this.scope.context.fillStyle = "#FFFFFF";
-        this.scope.context.fillText(`Salute tua: ${this.health.currentHealth}`, 10, 30);
+        this.scope.context.fillText(`Salute tua: ${this.health.curr}`, 10, 30);
     }
 
     update(tick) {
         // console.log(`Player position: x=${this.position.x}, y=${this.position.y}`);
         // Se non viene premuto nessun tasto, non facciamo nulla
-        console.log(`Player update at tick: ${this.position.x}, y=${this.position.y}`);
+        // console.log(`Player update at tick: ${this.position.x}, y=${this.position.y}`);
         if (!keysDown.isPressed.isAny) return;
 
         const { nextX, nextY, addX, addY } = this.calculateNextPosition();
@@ -54,26 +54,26 @@ export class Player extends DynamicEntity {
 
         // Gestione del movimento
         if (keysDown.isPressed.left) {
-            this.direction = Directions.LEFT;
-            nextX -= this.moveSpeed;
+            this.movement.dir = Directions.LEFT;
+            nextX -= this.movement.speed;
             addX -= 1;
         }
 
         if (keysDown.isPressed.right) {
-            this.direction = Directions.RIGHT;
-            nextX += this.moveSpeed;
+            this.movement.dir = Directions.RIGHT;
+            nextX += this.movement.speed;
             addX += 1;
         }
 
         if (keysDown.isPressed.up) {
-            this.direction = Directions.UP;
-            nextY -= this.moveSpeed;
+            this.movement.dir = Directions.UP;
+            nextY -= this.movement.speed;
             addY -= 1;
         }
 
         if (keysDown.isPressed.down) {
-            this.direction = Directions.DOWN;
-            nextY += this.moveSpeed;
+            this.movement.dir = Directions.DOWN;
+            nextY += this.movement.speed;
             addY += 1;
         }
 

@@ -36,8 +36,8 @@ export class DynamicEntity extends Entity {
         if (this.shootingProperties.lastShootTime + this.shootingProperties.reloadTime > tick) return;
 
         // la velocità del proiettile non può essere inferiore alla velocità di movimento dell'entità
-        if (bulletSpeed < this.moveSpeed) 
-            bulletSpeed += this.moveSpeed;
+        if (bulletSpeed <= this.movement.speed) 
+            bulletSpeed += this.movement.speed;
 
         const bulletPosition = this.calculateBulletPosition(bulletWidth, bulletHeight);
 
@@ -47,7 +47,7 @@ export class DynamicEntity extends Entity {
             bulletPosition,
             { w: bulletWidth, h: bulletHeight },
             { speed: bulletSpeed, dir: this.movement.dir },
-            { curr: bulletHealth, max: bulletHealth, immortal: false, timeToLive: 0 },
+            { curr: bulletHealth, max: bulletHealth, immortal: false, timeToLive: -1 },
             this.shootingProperties.defaultDamage,
             this
         );

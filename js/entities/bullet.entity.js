@@ -25,12 +25,12 @@ export class Bullet extends Entity {
 
 
         context.fillStyle = `rgba(255, 255, 255)`;
-        // context.fillR
+        // context.fill
         context.beginPath();
         context.arc(
-            this.position.x % this.scope.constants.width + this.width / 2,
-            this.position.y % this.scope.constants.height + this.height / 2,
-            this.width / 2,
+            this.position.x % this.scope.constants.width + this.dimensions.w / 2,
+            this.position.y % this.scope.constants.height + this.dimensions.h / 2,
+            this.dimensions.w / 2,
             0,
             Math.PI * 2
         );
@@ -41,7 +41,7 @@ export class Bullet extends Entity {
     update(tick) {
 
         // se il proiettile vive da troppo tempo lo rimuoviamo
-        if (immortal === false && this.health.timeToLive != -1) {
+        if (this.health.immortal === false && this.health.timeToLive != -1) {
             if (tick - this.infos.createdAt > this.health.timeToLive) {
                 this.die();
                 return;
@@ -55,17 +55,17 @@ export class Bullet extends Entity {
         let addX = 0, addY = 0;
 
         // Movimento base
-        if (this.direction === Directions.EAST) {
-            nextX += this.moveSpeed;
+        if (this.movement.dir === Directions.EAST) {
+            nextX += this.movement.speed;
             addX += 1;
-        } else if (this.direction === Directions.SOUTH) {
-            nextY += this.moveSpeed;
+        } else if (this.movement.dir === Directions.SOUTH) {
+            nextY += this.movement.speed;
             addY += 1;
-        } else if (this.direction === Directions.WEST) {
-            nextX -= this.moveSpeed;
+        } else if (this.movement.dir === Directions.WEST) {
+            nextX -= this.movement.speed;
             addX -= 1;
-        } else if (this.direction === Directions.NORTH) {
-            nextY -= this.moveSpeed;
+        } else if (this.movement.dir === Directions.NORTH) {
+            nextY -= this.movement.speed;
             addY -= 1;
         }
 
@@ -112,8 +112,8 @@ export class Bullet extends Entity {
                 this.scope,
                 this.scene,
                 {
-                    x: this.position.x + this.width / 2,
-                    y: this.position.y + this.height / 2,
+                    x: this.position.x + this.dimensions.w / 2,
+                    y: this.position.y + this.dimensions.h / 2,
                 },
                 velocity,
                 300 // durata in ms

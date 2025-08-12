@@ -37,8 +37,6 @@ export class Enemy extends DynamicEntity {
         // const player = [...this.state.entities].find(([e, info]) => info.type === 'player')?.[0];
         // Se esiste il player e la griglia è disponibile, esegui il pathfinding
         if (this.player) {
-            // console.log(`Player position: x=${this.player.position.x}, y=${this.player.position.y}`);
-
             if (this.scope.grid) {
                 enemyUpdate(this, this.player, this.scope.grid);
             }

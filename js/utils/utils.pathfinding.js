@@ -7,10 +7,12 @@ export function enemyUpdate(enemy, player, gridData) {
   const dist = Math.hypot(dx, dy);
 
   if (dist > 1) {
-    const moveX = (dx / dist) * enemy.moveSpeed;
-    const moveY = (dy / dist) * enemy.moveSpeed;
+    console.log(`Enemy ${enemy.constructor.name} is moving towards player at distance: ${dist}`);
+    const moveX = (dx / dist) * enemy.movement.speed;
+    const moveY = (dy / dist) * enemy.movement.speed;
     const nextX = enemy.position.x + moveX;
     const nextY = enemy.position.y + moveY;
+    console.log(`Enemy ${enemy.constructor.name} next position: x=${nextX}, y=${nextY}`);
 
     const { collision } = enemy.checkCollision(nextX, nextY);
     if (!collision) {

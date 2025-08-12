@@ -54,7 +54,7 @@ export default class Game {
         let camera = new Camera(this, width, height);
         this.world = new World(this, camera, scene)
 
-        let player = new Player(scene, { x: width / 2, y: height / 2 }, {w: 64, h: 64}, {speed: 5, dir: Directions.DOWN}, {curr: 100, max: 100, immortal: false, timeToLive: -1}, null, {
+        let player = new Player(scene, { x: Math.floor(width / 2), y: Math.floor(height / 2) }, {w: 64, h: 64}, {speed: 5, dir: Directions.DOWN}, {curr: 100, max: 100, immortal: false, timeToLive: -1}, null, {
             availableShoots: 0,
             maxShoots: 0,
             defaultDamage: 10,
@@ -63,7 +63,7 @@ export default class Game {
         });
         scene.addPlayer(player);
 
-        let enemy1 = new Enemy(scene, { x: 100, y: 30 }, {w: 64, h: 64}, { spped: 3, dir: Directions.DOWN }, { curr: 100, max: 100, immortal: false, timeToLive: -1 }, null, {
+        let enemy1 = new Enemy(scene, {x: 100, y: 30}, {w: 64, h: 64}, { speed: 3, dir: Directions.DOWN }, { curr: 100, max: 100, immortal: false, timeToLive: -1 }, {basicSrc: '../assets/zuccaccia/basic.png'}, {
             availableShoots: 0,
             maxShoots: 0,
             defaultDamage: 5,

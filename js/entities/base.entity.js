@@ -38,6 +38,19 @@ export class Entity {
                 this.dimensions.h
             );
             return;
+        } else {
+            const img = new Image();
+            img.src = this.assets.basicSrc
+
+            img.onload = () => {
+                this.scope.context.drawImage(
+                    img,
+                    this.position.x % this.scope.constants.width,
+                    this.position.y % this.scope.constants.height,
+                    this.dimensions.w,
+                    this.dimensions.h
+                );
+            }
         }
     }
 
@@ -79,7 +92,7 @@ export class Entity {
     }
 
     checkEntityCollisions(nextX, nextY) {
-        const entities = this.scope.world.scene.entities;
+        const entities = this.scene.entities;
         for (const entity of entities.keys()) {
             if (
                 this !== entity &&

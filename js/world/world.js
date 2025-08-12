@@ -19,7 +19,7 @@ export class World {
         const entities = this.scene.entities;
         for (const entity of entities.keys()) {
             if (this.camera.isOnCamera(entity).onCamera) {
-                console.log(`Rendering entity: ${entity.constructor.name} at position x=${entity.position.x}, y=${entity.position.y}`);
+                // console.log(`Rendering entity: ${entity.constructor.name} at position x=${entity.position.x}, y=${entity.position.y}`);
                 entity.render(this.scope.tick);
             }
         }
