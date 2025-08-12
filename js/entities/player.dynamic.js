@@ -4,23 +4,31 @@ import { DynamicEntity } from "./dynamic.entity.js";
 
 export class Player extends DynamicEntity {
     constructor(
-        scope,
         scene,
         position = { x: 0, y: 0 },
-        moveSpeed = 10,
-        width = 20,
-        height = 20,
-        direction = Directions.EAST,
-        health = 100,
-        damage = 10
+        dimensions = { w: 23, h: 16 },
+        movement = { speed: 0, dir: Directions.DOWN },
+        // timetoLive è il tempo di vita dell'entità, -1 significa che non ha un tempo di vita
+        health = { curr: 100, max: 100, immortal: false, timeToLive: -1},
+        assets = null,
+        // proprietà aggiuntive per le entità dinamiche
+        shootingProperties = {
+            availableShoots: 0, // numero di proiettili disponibili
+            maxShoots: 0, // numero massimo di proiettili che si possono avere
+            defaultDamage: 10, // danno di default dei proiettili
+            lastShootTime: 0,
+            reloadTime: 100 // tempo di ricarica in millisecondi
+        },
     ) {
-        super(scope, scene, position, moveSpeed, width, height, direction, health, damage);
+        super(scene, position, dimensions, movement, health, assets, shootingProperties);
     }
 
     render() {
         super.render("#40d870");
+
+        // Mostra la salute del giocatore
         this.scope.context.fillStyle = "#FFFFFF";
-        this.scope.context.fillText(`Player health: ${this.health.currentHealth}`, 10, 30);
+        this.scope.context.fillText(`Salute tua: ${this.health.currentHealth}`, 10, 30);
     }
 
     update(tick) {
@@ -29,6 +37,17 @@ export class Player extends DynamicEntity {
         console.log(`Player update at tick: ${this.position.x}, y=${this.position.y}`);
         if (!keysDown.isPressed.isAny) return;
 
+        const { nextX, nextY, addX, addY } = this.calculateNextPosition();
+
+        this.handleMovement(nextX, nextY, addX, addY);
+
+        // Gestione dello sparo
+        if (keysDown.isPressed.space) {
+            this.shoot(5, 10, 10, 10, tick);
+        }
+    }
+
+    calculateNextPosition() {
         let nextX = this.position.x;
         let nextY = this.position.y;
         let addX = 0, addY = 0;
@@ -58,16 +77,17 @@ export class Player extends DynamicEntity {
             addY += 1;
         }
 
-        let collision, isBorder, entityCollided;
+        return { nextX, nextY, addX, addY };
+    }
+
+    handleMovement(nextX, nextY, addX, addY) {
         let x = this.position.x;
         let y = this.position.y;
 
-        // console.log(x, y, nextX, nextY, 'player update');
-
         // Movimento incrementale con controllo collisioni
-        while (x != nextX || y != nextY) {
-            if (x != nextX) x += addX;
-            if (y != nextY) y += addY;
+        while (x !== nextX || y !== nextY) {
+            if (x !== nextX) x += addX;
+            if (y !== nextY) y += addY;
 
             const collisionRes = this.checkCollision(x, y);
 
@@ -77,12 +97,8 @@ export class Player extends DynamicEntity {
                 this.changePosition(x, y);
             }
         }
-
-        // Gestione dello sparo
-        if (keysDown.isPressed.space) {
-            this.shoot(5, 10, 10, 10, this.damage, tick);
-        }
     }
+
     checkCollision(nextX, nextY) {
         // Verifica collisioni tramite il metodo della classe base
         return super.checkCollision(nextX, nextY)

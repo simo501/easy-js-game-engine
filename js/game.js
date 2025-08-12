@@ -3,11 +3,12 @@ import { GameUpdate } from './core/game.update.js';
 import { GameRender } from './core/game.render.js';
 import { GameLoop } from './core/game.loop.js';
 import { Scene } from './scenes/scene.js';
-import { Player } from './entities/player.js';
-import { Enemy } from './entities/enemy.js';
-import { Block } from './entities/block.js';
+import { Player } from './entities/player.dynamic.js';
+import { Enemy } from './entities/enemy.dynamic.js';
+import { Block } from './entities/block.entity.js';
 import { World } from './world/world.js';
 import { Camera } from './core/game.camera.js';
+import { Directions } from './utils/utils.directions.js';
 
 
 const maxWidth = window.innerWidth;
@@ -43,27 +44,36 @@ export default class Game {
         this.viewport.id = 'gameViewport';
         this.tick = 0; // inizializziamo il tick a 0
         this.grid = null; // inizializziamo la griglia a null
-        
+
         // inseriamo il canvas nel container prima di qualsiasi altro elemento
         $container.insertBefore(this.viewport, $container.firstChild);
 
         // inizializziamo il giocatore
-        
+
         let scene = new Scene(this, true);
         let camera = new Camera(this, width, height);
         this.world = new World(this, camera, scene)
 
-        let player = new Player(this, scene, { x: width / 2, y: height / 2 }, 10, 20, 20, 10);
+        let player = new Player(scene, { x: width / 2, y: height / 2 }, {w: 64, h: 64}, {speed: 5, dir: Directions.DOWN}, {curr: 100, max: 100, immortal: false, timeToLive: -1}, null, {
+            availableShoots: 0,
+            maxShoots: 0,
+            defaultDamage: 10,
+            lastShootTime: 0,
+            reloadTime: 100
+        });
         scene.addPlayer(player);
 
-        let enemy1 = new Enemy(this, scene, { x: 100, y: 30 }, 5, 40, 20, player);
-        let block1 = new Block(this, scene, { x: 200, y: 60 }, 20, 20);
-        let block2 = new Block(this, scene, { x: 300, y: 100 }, 20, 20);
+        let enemy1 = new Enemy(scene, { x: 100, y: 30 }, {w: 64, h: 64}, { spped: 3, dir: Directions.DOWN }, { curr: 100, max: 100, immortal: false, timeToLive: -1 }, null, {
+            availableShoots: 0,
+            maxShoots: 0,
+            defaultDamage: 5,
+            lastShootTime: 0,
+            reloadTime: 500
+        },
+            player);
 
         scene.addEntity(enemy1);
-        scene.addEntity(block1);
-        scene.addEntity(block2);
-        
+
 
         // assegnamo ad update un istanza di GameUpdate
         // e render un istanza di GameRender

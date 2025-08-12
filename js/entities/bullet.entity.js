@@ -1,53 +1,31 @@
 import { Entity } from "./base.entity.js";
 import { Directions } from "../utils/utils.directions.js";
-import { Block } from "./block.js";
+import { Block } from "./block.entity.js";
 import { Particle } from './particles.js';
 import { DynamicEntity } from "./dynamic.entity.js";
 
 
 export class Bullet extends Entity {
     constructor(
-        scope,
         scene,
-        position,
-        moveSpeed = 5,
-        width = 10,
-        height = 10,
-        direction = Directions.EAST,
-        health = 10,
-        damage = 10,
-        entityOrigin
+        position = { x: 0, y: 0 },
+        dimensions = { w: 23, h: 16 },
+        movement = { speed: 0, dir: Directions.DOWN },
+        health = { curr: 100, max: 100, immortal: false, timeToLive: -1 },
+        assets = null,
+        // proprietà aggiuntive per i proiettili
+        shooter = null, // l'entità che ha sparato il proiettile
     ) {
-        super(scope, scene, position, moveSpeed, width, height, direction, health, damage);
-        this.entityOrigin = this.entityOrigin
-        this.timeToLive = 3000; // tempo di vita del proiettile in millisecondi
+        super(scene, position, dimensions, movement, health, assets);
+        this.shooter = shooter;
     }
 
     render(tick) {
         const context = this.scope.context;
-        const timePassed = tick - this.createdAt;
-        const fadeStart = this.timeToLive * 0.3; // 30% vita piena, 70% dissolvenza
-        const fadeDuration = this.timeToLive - fadeStart;
 
-        let fadeProgress = 0;
 
-        if (timePassed > fadeStart) {
-            fadeProgress = Math.min(1, (timePassed - fadeStart) / fadeDuration);
-        }
-
-        const alpha = 1 - fadeProgress;
-        const scale = 1 - fadeProgress * 0.5; // solo fino a metà dimensione
-
-        const scaledWidth = this.width * scale;
-        const scaledHeight = this.height * scale;
-
-        context.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-        // context.fillRect(
-        //     this.position.x + (this.width - scaledWidth) / 2,
-        //     this.position.y + (this.height - scaledHeight) / 2,
-        //     scaledWidth,
-        //     scaledHeight
-        // );
+        context.fillStyle = `rgba(255, 255, 255)`;
+        // context.fillR
         context.beginPath();
         context.arc(
             this.position.x % this.scope.constants.width + this.width / 2,
@@ -60,20 +38,21 @@ export class Bullet extends Entity {
     }
 
 
-
     update(tick) {
 
         // se il proiettile vive da troppo tempo lo rimuoviamo
-        if (tick - this.createdAt > this.timeToLive) {
-            this.removeBullet();
-            return;
+        if (immortal === false && this.health.timeToLive != -1) {
+            if (tick - this.infos.createdAt > this.health.timeToLive) {
+                this.die();
+                return;
+            }
         }
+
 
         let nextX = this.position.x;
         let nextY = this.position.y;
 
         let addX = 0, addY = 0;
-
 
         // Movimento base
         if (this.direction === Directions.EAST) {
@@ -99,14 +78,12 @@ export class Bullet extends Entity {
             const collisionRes = this.checkCollision(x, y);
             // controlliamo quale entità ha colliso con il proiettile
             if (collisionRes.collision) {
-                if (collisionRes.isBorder || (collisionRes.entityCollided && collisionRes.entityCollided instanceof Block) ) {
-                    this.invertDirection();
+                if (collisionRes.isBorder || (collisionRes.entityCollided && collisionRes.entityCollided instanceof Block)) {
+                    this.die();
                 } else if (collisionRes.entityCollided instanceof DynamicEntity) {
                     collisionRes.entityCollided.takeDamage(this.damage)
-                    this.removeBullet();
+                    this.die();
                     break
-                } else if (collisionRes.entityCollided instanceof Bullet) {
-                    this.changePosition(nextX, nextY);
                 }
             } else {
                 this.changePosition(x, y);
@@ -146,9 +123,8 @@ export class Bullet extends Entity {
         }
     }
 
-    removeBullet() {
-        this.spawnParticles();
-        this.die();
+    die() {
+        super.die();
     }
 
 }

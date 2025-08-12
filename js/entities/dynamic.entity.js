@@ -1,36 +1,27 @@
 import { Entity } from "./base.entity.js";
 import { Directions } from "../utils/utils.directions.js";
-import { Bullet } from "./bullet.js";
+import { Bullet } from "./bullet.entity.js";
 
 export class DynamicEntity extends Entity {
     constructor(
-        scope,
         scene,
         position = { x: 0, y: 0 },
-        moveSpeed = 3,
-        width = 23,
-        height = 16,
-        direction = Directions.EAST,
-        health = 100,
-        damage = 10,
-        maxShoots = 10
-    ) {
-        super(scope, scene, position, moveSpeed, width, height, direction, damage);
-
-        // salute attuale dell'entità
-        this.health = {
-            currentHealth: health,
-            maxHealth: health
-        }
-        // salute massima dell'entità
-
-        this.shootProperties = {
-            availableShoots: maxShoots, // numero di proiettili disponibili
-            maxShoots: maxShoots, // numero massimo di proiettili che
-            defaultDamage: damage, // danno di default dei proiettili
+        dimensions = { w: 23, h: 16 },
+        movement = { speed: 0, dir: Directions.DOWN },
+        // timetoLive è il tempo di vita dell'entità, -1 significa che non ha un tempo di vita
+        health = { curr: 100, max: 100, immortal: false, timeToLive: -1},
+        assets = null,
+        // proprietà aggiuntive per le entità dinamiche
+        shootingProperties = {
+            availableShoots: 0, // numero di proiettili disponibili
+            maxShoots: 0, // numero massimo di proiettili che si possono avere
+            defaultDamage: 10, // danno di default dei proiettili
             lastShootTime: 0,
             reloadTime: 100 // tempo di ricarica in millisecondi
-        }
+        },
+    ) {
+        super(scene, position, dimensions, movement, health, assets);
+        this.shootingProperties = shootingProperties;
     }
 
     // la direzione di sparo è determinata correttamente da Bullet.js
@@ -39,66 +30,49 @@ export class DynamicEntity extends Entity {
         bulletWidth = 10,
         bulletHeight = 10,
         bulletHealth = 10,
-        bulletDamage = this.damage,
         tick
     ) {
         // contorlliamo il reload time
-        if (this.shootProperties.lastShootTime + this.shootProperties.reloadTime > tick) return;
+        if (this.shootingProperties.lastShootTime + this.shootingProperties.reloadTime > tick) return;
 
-        if (bulletSpeed < this.moveSpeed) {
+        // la velocità del proiettile non può essere inferiore alla velocità di movimento dell'entità
+        if (bulletSpeed < this.moveSpeed) 
             bulletSpeed += this.moveSpeed;
-        }
 
-        // implementazione del metodo di sparo, che può essere usato da Player e Enemy
-        let bulletX = 0, bulletY = 0;
+        const bulletPosition = this.calculateBulletPosition(bulletWidth, bulletHeight);
 
-
-        // dobbiamo rimuovere in certi casi la width e l'height del proiettile
-        // perchè crescono da sinistra a destra e dall'alto verso il basso
-        // quindi se non rimuoviamo la width e l'height del proiettile
-        // il proiettile parte da dentro l'entità dinamica
-        if (this.direction === Directions.EAST) {
-            bulletX = this.position.x + this.width;
-            bulletY = this.position.y + (this.height - bulletHeight) / 2;
-        } else if (this.direction === Directions.SOUTH) {
-            bulletX = this.position.x + (this.width - bulletWidth) / 2;
-            bulletY = this.position.y + this.height;
-        } else if (this.direction === Directions.WEST) {
-            bulletX = this.position.x - bulletWidth;
-            bulletY = this.position.y + (this.height - bulletHeight) / 2;
-        } else if (this.direction === Directions.NORTH) {
-            bulletX = this.position.x + (this.width - bulletWidth) / 2;
-            bulletY = this.position.y - bulletHeight;
-        }
-
-        let bulletPosition = { x: bulletX, y: bulletY };
-
-        // console.log(`Sparo in direzione ${this.direction} da posizione x:${bulletPosition.x},y: ${bulletPosition.y}`);
-
-        // l'oggetto bullet rimane vivo fino a che ci sono riferimenti ad esso
-        // quindi lo aggiungiamo allo stato del gioco
-        this.shootProperties.lastShootTime = tick;
 
         const bullet = new Bullet(
-            this.scope,
             this.scene,
             bulletPosition,
-            bulletSpeed,
-            bulletWidth,
-            bulletHeight,
-            this.direction,
-            bulletHealth,
-            bulletDamage,
-            this // campo entityOrigin per tenere traccia dell'entità che ha sparato il proiettile
+            { w: bulletWidth, h: bulletHeight },
+            { speed: bulletSpeed, dir: this.movement.dir },
+            { curr: bulletHealth, max: bulletHealth, immortal: false, timeToLive: 0 },
+            this.shootingProperties.defaultDamage,
+            this
         );
 
         this.scene.addEntity(bullet);
+        this.shootingProperties.lastShootTime = tick;
     }
 
-    takeDamage(amount) {
-        this.health.currentHealth -= amount;
-        if (this.health.currentHealth <= 0) {
-            this.die();
+    calculateBulletPosition(bulletWidth, bulletHeight) {
+        let bulletX = 0, bulletY = 0;
+
+        if (this.movement.dir === Directions.EAST) {
+            bulletX = this.position.x + this.dimensions.w;
+            bulletY = this.position.y + (this.dimensions.h - bulletHeight) / 2;
+        } else if (this.movement.dir === Directions.SOUTH) {
+            bulletX = this.position.x + (this.dimensions.w - bulletWidth) / 2;
+            bulletY = this.position.y + this.dimensions.h;
+        } else if (this.movement.dir === Directions.WEST) {
+            bulletX = this.position.x - bulletWidth;
+            bulletY = this.position.y + (this.dimensions.h - bulletHeight) / 2;
+        } else if (this.movement.dir === Directions.NORTH) {
+            bulletX = this.position.x + (this.dimensions.w - bulletWidth) / 2;
+            bulletY = this.position.y - bulletHeight;
         }
+
+        return { x: bulletX, y: bulletY };
     }
 }

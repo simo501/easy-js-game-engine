@@ -14,7 +14,7 @@ export class World {
     render() {
         const ctx = this.scope.context;
 
-        ctx.fillText(`orario: ${this.getTimeOfDay().hours}:${this.getTimeOfDay().minutes}`, 10, 70);
+        // ctx.fillText(`orario: ${this.getTimeOfDay().hours}:${this.getTimeOfDay().minutes}`, 10, 70);
 
         const entities = this.scene.entities;
         for (const entity of entities.keys()) {
