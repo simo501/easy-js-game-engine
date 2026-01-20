@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- qui disabilitiamo anche il pinch to zoom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Simple JS Game Engine</title>
+</head>
+
+<style>
+    html {
+        touch-action: manipulation;
+        background: #242424
+    }
+
+    button {
+        height: 60px;
+        width: 80px;
+        font-size: large;
+        border-radius: 0;
+        user-select: none;
+        /* Disabilita la selezione del testo */
+        -webkit-user-select: none;
+        /* Compatibilità con WebKit */
+        -moz-user-select: none;
+        /* Compatibilità con Firefox */
+        -ms-user-select: none;
+        /* Compatibilità con IE */
+    }
+</style>
+
+<body style="width: 100%; height: 100%; margin: 0; overflow: hidden;">
+
+
+    <div id="container"
+        style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+
+        <div style="display: flex; flex-direction: row;">
+            <button style="margin-left: 0;" id="btn-left">L</button>
+            <button style="margin-left: 0;" id="btn-right">R</button>
+            <button style="margin-left: 0;" id="btn-up">U</button>
+            <button style="margin-left: 0;" id="btn-down">D</button>
+            <button style="margin-left: 0;" id="btn-space">S</button>
+
+        </div>
+    </div>
+
+
+</body>
+
+<script type="module" src="js/game.js"></script>
+
+</html>

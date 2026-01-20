@@ -1,0 +1,149 @@
+import { Entity } from "./base.entity.js";
+import { Directions } from "../utils/utils.directions.js";
+import { Block } from "./block.entity.js";
+import { Particle } from './particles.entity.js';
+import { DynamicEntity } from "./dynamic.entity.js";
+
+import * as colors from "../utils/utils.colors.js"
+
+
+export class Bullet extends Entity {
+    constructor(
+        scene,
+        position = {},
+        dimensions = {},
+        movement = {},
+        health = {},
+        assets = null,
+        // proprietà aggiuntive per i proiettili
+        // chi ha sparato e il danno del proiettile
+        // {shooter: "", damage: 10 }
+        balistics = null, // l'entità che ha sparato il proiettile
+        identity = {}
+    ) {
+
+        const defaultIdentity = { name: "Bullet", color: colors.gameboyBlock };
+        const mergedIdentity = { ...defaultIdentity, ...identity };
+
+        super(scene, position, dimensions, movement, health, assets, mergedIdentity);
+
+        const defaultBalistics = {
+            shooter: null,
+            damage: 10
+        };
+
+        this.balistics = { ...defaultBalistics, ...balistics };
+    }
+
+    render(tick) {
+        const context = this.scope.context;
+
+
+        context.fillStyle = this.identity.color;
+        // context.fill
+        context.beginPath();
+        context.arc(
+            this.position.x % this.scope.constants.width + this.dimensions.w / 2,
+            this.position.y % this.scope.constants.height + this.dimensions.h / 2,
+            this.dimensions.w / 2,
+            0,
+            Math.PI * 2
+        );
+        context.fill();
+    }
+
+
+    update(tick) {
+
+        // se il proiettile vive da troppo tempo lo rimuoviamo
+        if (this.health.immortal === false && this.health.timeToLive != -1) {
+            if (tick - this.infos.createdAt > this.health.timeToLive) {
+                this.die();
+                return;
+            }
+        }
+
+
+        let nextX = this.position.x;
+        let nextY = this.position.y;
+
+        let addX = 0, addY = 0;
+
+        // Movimento base
+        if (this.movement.dir === Directions.EAST) {
+            nextX += this.movement.speed;
+            addX += 1;
+        } else if (this.movement.dir === Directions.SOUTH) {
+            nextY += this.movement.speed;
+            addY += 1;
+        } else if (this.movement.dir === Directions.WEST) {
+            nextX -= this.movement.speed;
+            addX -= 1;
+        } else if (this.movement.dir === Directions.NORTH) {
+            nextY -= this.movement.speed;
+            addY -= 1;
+        }
+
+        let x = this.position.x, y = this.position.y;
+
+        while (x != nextX || y != nextY) {
+            if (x != nextX) x += addX;
+            if (y != nextY) y += addY;
+            // è il metodo check collision che cambia posizione
+            const collisionRes = this.checkCollision(x, y);
+            // controlliamo quale entità ha colliso con il proiettile
+            if (collisionRes.collision) {
+                if (collisionRes.isBorder || (collisionRes.entityCollided && collisionRes.entityCollided instanceof Block)) {
+                    this.die();
+                    break;
+                } else if (collisionRes.entityCollided instanceof DynamicEntity) {
+                    collisionRes.entityCollided.takeDamage(this.balistics.damage);
+                    this.die();
+                    break
+                } else if (collisionRes.entityCollided instanceof Bullet) {
+                    collisionRes.entityCollided.takeDamage(this.balistics.damage);
+                    break
+                }
+            } else {
+                this.changePosition(x, y);
+            }
+        }
+    }
+
+    checkCollision(nextX, nextY) {
+        return super.checkCollision(nextX, nextY);
+    }
+
+
+    spawnParticles() {
+        const numParticles = 4;
+        const baseSpeed = 2;
+
+        for (let i = 0; i < numParticles; i++) {
+            const angle = (Math.PI * 2 / numParticles) * i;
+
+            const velocity = {
+                x: Math.cos(angle) * baseSpeed,
+                y: Math.sin(angle) * baseSpeed,
+            };
+
+            const particle = new Particle(
+                this.scope,
+                this.scene,
+                {
+                    x: this.position.x + this.dimensions.w / 2,
+                    y: this.position.y + this.dimensions.h / 2,
+                },
+                velocity,
+                300 // durata in ms
+            );
+
+            this.scene.addEntity(particle);
+        }
+    }
+
+    die() {
+        super.die();
+    }
+
+}
